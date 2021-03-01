@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <PackageVersion Condition="'$(PackageVersion)' == ''">1.0.0-dev</PackageVersion>
+  </PropertyGroup>
+</Project>
+<!-- vi: set ft=xml: -->
