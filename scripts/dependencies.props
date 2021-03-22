@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!-- Product dependencies -->
     <HtmlAgilityPackVersion>1.11.30</HtmlAgilityPackVersion>
+    <JTForksMiscUtilVersion>1.285.0</JTForksMiscUtilVersion>
     <MarkdigVersion>0.23.0</MarkdigVersion>
     <MobiToolkitVersion>1.0.4</MobiToolkitVersion>
     <PdfPigVersion>0.1.4</PdfPigVersion>

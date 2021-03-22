@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
+    <PackageReference Include="JTForks.MiscUtil" Version="$(JTForksMiscUtilVersion)" />
     <PackageReference Include="Markdig" Version="$(MarkdigVersion)" />
     <PackageReference Include="Roler.Toolkit.File.Mobi" Version="$(MobiToolkitVersion)" />
     <PackageReference Include="PdfPig" Version="$(PdfPigVersion)" />

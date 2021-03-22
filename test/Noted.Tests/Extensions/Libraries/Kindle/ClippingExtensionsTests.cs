@@ -1,5 +1,5 @@
 // Copyright (c) Arun Mahapatra. All rights reserved.
-// Licensed under the GPLv3 license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Noted.Tests.Extensions.Libraries.Kindle
 {
@@ -33,7 +33,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
             Assert.AreEqual(clipping.Content, annotation.Content);
             Assert.AreEqual(clipping.CreationDate, annotation.CreatedDate);
             Assert.AreEqual(clipping.PageNumber, annotation.Context.PageNumber);
-            Assert.AreEqual("line://10-12", annotation.Context.Location);
+            Assert.AreEqual("line://10-12", annotation.Context.SerializedLocation);
             Assert.AreEqual(clipping.Book, annotation.Document.Title);
             Assert.AreEqual(clipping.Author, annotation.Document.Author);
             Assert.AreEqual(expectedType, annotation.Type);

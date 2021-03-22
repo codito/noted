@@ -11,4 +11,4 @@ TODO
 
 ## License
 
-GPLv3
+MIT

@@ -1,5 +1,5 @@
 // Copyright (c) Arun Mahapatra. All rights reserved.
-// Licensed under the GPLv3 license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Noted.Extensions.Readers
 {
@@ -76,13 +76,14 @@ namespace Noted.Extensions.Readers
                 }
             }
 
+            DateTime.TryParse(doc.Information.ModifiedDate, out var modifiedDate);
             return new Document
             {
                 Title = docReference.Title,
                 Author = docReference.Author,
                 Subject = doc.Information.Subject,
                 Keywords = doc.Information.Keywords,
-                ModifiedDate = doc.Information.ModifiedDate,
+                ModifiedDate = modifiedDate,
                 Annotations = annotations
             };
         }

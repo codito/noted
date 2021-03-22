@@ -1,5 +1,5 @@
 // Copyright (c) Arun Mahapatra. All rights reserved.
-// Licensed under the GPLv3 license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Noted.Extensions.Libraries.Kindle
 {
@@ -15,7 +15,7 @@ namespace Noted.Extensions.Libraries.Kindle
                 Content = clipping.Content,
                 Context = new AnnotationContext
                 {
-                    Location = LineLocationScheme.ToString(clipping.Location),
+                    SerializedLocation = LineLocationScheme.ToString(clipping.Location),
                     PageNumber = clipping.PageNumber
                 },
                 CreatedDate = clipping.CreationDate,

@@ -9,7 +9,7 @@
          Sets the AssemblyVersion, AssemblyFileVersion and AssemblyInformationalVersion -->
     <Version Condition="'$(Version)' == ''">$(SourcePrefix)-dev</Version>
     <PackageVersion Condition="'$(PackageVersion)' == ''">$(SourcePrefix)-dev</PackageVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
