@@ -137,7 +137,6 @@ namespace Noted.Extensions.Readers.Mobi
             content.LoadHtml(contentHtml);
 
             var headers = ExtractSections(contentHtml).ToArray();
-            var headerIndex = 0;
             var headerTextMap = new Dictionary<int, string>();
 
             var sb = new StringBuilder();

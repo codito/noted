@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ephemerality.Unpack" Version="$(EphemeralityUnpackVersion)" />
     <PackageReference Include="HtmlAgilityPack" Version="$(HtmlAgilityPackVersion)" />
     <PackageReference Include="JTForks.MiscUtil" Version="$(JTForksMiscUtilVersion)" />
     <PackageReference Include="Markdig" Version="$(MarkdigVersion)" />

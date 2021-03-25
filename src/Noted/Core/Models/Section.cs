@@ -9,12 +9,12 @@ namespace Noted.Core.Models
     public class Section
     {
         /// <summary>
-        /// Title or heading for the section.
+        /// Gets or sets the title or heading for the section.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Start location of the Section relative to the Document from beginning.
+        /// Gets or sets the start location of the Section relative to the Document from beginning.
         /// </summary>
         public int Location { get; set; }
     }

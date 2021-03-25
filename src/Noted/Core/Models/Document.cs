@@ -19,12 +19,12 @@ namespace Noted.Core.Models
         public string Source { get; set; }
 
         /// <summary>
-        /// Sorted list of annotations in the Document.
+        /// Gets or sets a sorted list of annotations in the Document.
         /// </summary>
         public IEnumerable<Annotation> Annotations { get; set; }
 
         /// <summary>
-        /// Sorted list of section headings in the Document.
+        /// Gets or sets a sorted list of section headings in the Document.
         /// </summary>
         public IEnumerable<Section> Sections { get; set; }
     }

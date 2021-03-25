@@ -4,21 +4,14 @@
 namespace Noted.Extensions.Readers
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
     using System.Linq;
-    using System.Text;
-    using System.Web;
-    using HtmlAgilityPack;
+    using Ephemerality.Unpack.Mobi;
     using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Extensions.Readers.Mobi;
-    using Roler.Toolkit.File.Mobi;
-    using Roler.Toolkit.File.Mobi.Entity;
-    using XRayBuilder.Core.Unpack.Mobi;
 
     public class MobiReader : IDocumentReader
     {
@@ -42,7 +35,7 @@ namespace Noted.Extensions.Readers
                 Author = mobi.Creator
             };
 #else
-            var mobi = new Metadata(stream);
+            var mobi = new MobiMetadata(stream);
             var text = new StreamReader(mobi.GetRawMlStream()).ReadToEnd();
             var docRef = new DocumentReference
             {

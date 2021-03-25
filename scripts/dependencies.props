@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- Product dependencies -->
+    <EphemeralityUnpackVersion>0.0.2</EphemeralityUnpackVersion>
     <HtmlAgilityPackVersion>1.11.30</HtmlAgilityPackVersion>
     <JTForksMiscUtilVersion>1.285.0</JTForksMiscUtilVersion>
     <MarkdigVersion>0.23.0</MarkdigVersion>
