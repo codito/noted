@@ -3,7 +3,6 @@
 
 namespace Noted.Extensions.Libraries
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Noted.Core.Extensions;

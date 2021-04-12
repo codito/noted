@@ -52,7 +52,7 @@ namespace Noted.Extensions.Readers
                 ref createdDate,
                 ref modifiedDate);
 
-            return new()
+            return new Document
             {
                 Title = docRef.Title,
                 Author = docRef.Author,

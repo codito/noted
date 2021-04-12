@@ -14,7 +14,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
     [TestClass]
     public class ClippingAnnotationProviderTests
     {
-        private const string SampleClippings = @"﻿The Design of Everyday Things: Revised and Expanded Edition (Norman, Don)
+        private const string SampleClippings = @" The Design of Everyday Things: Revised and Expanded Edition (Norman, Don)
 - Your Highlight on page 145 | Location 3015-3016 | Added on Thursday, August 15, 2019 10:14:40 AM
 
 Forcing functions can be a nuisance in normal usage. The result is that many people will deliberately disable the forcing function, thereby negating its safety feature.
@@ -50,6 +50,27 @@ The interpretation of a perceived affordance is a cultural convention.
             var clippings = kindle.GetAnnotations("dummyPath").ToList();
 
             Assert.AreEqual(3, clippings.Count);
+        }
+
+        [TestMethod]
+        public void GetClippingsShouldReturnZeroAnnotationsIfPathIsNotAccessible()
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream, Encoding.Unicode);
+            writer.Write(SampleClippings);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var fileSystem = new Mock<IFileSystem>();
+            fileSystem.Setup(f => f.IsDirectory(It.IsAny<string>()))
+                .Returns(false);
+            fileSystem.Setup(f => f.Exists(It.IsAny<string>()))
+                .Returns(false);
+            fileSystem.Setup(f => f.OpenPathForRead(It.IsAny<string>()))
+                .Returns(stream);
+            var kindle = new ClippingAnnotationProvider(fileSystem.Object);
+            var clippings = kindle.GetAnnotations("dummyPath").ToList();
+
+            Assert.AreEqual(0, clippings.Count);
         }
     }
 }

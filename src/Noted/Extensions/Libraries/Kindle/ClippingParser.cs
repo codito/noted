@@ -13,7 +13,6 @@ namespace Noted.Extensions.Libraries.Kindle
 
     public static class ClippingParser
     {
-        public const char AnnotationBeginMarker = '\ufeff';
         public const string AnnotationEndMarker = "==========";
 
         private static readonly Regex BookInfoRegex = new(
@@ -31,22 +30,15 @@ namespace Noted.Extensions.Libraries.Kindle
         public static IEnumerable<Clipping> Parse(Stream stream)
         {
             // Annotations format
-            //  ZWNBSP <Book name> (Book author)
+            //  <Book name> (Book author)
             //  - Your (Highlight|Note) on page <number> | Location x-y | Added on <date>
             //
             //  <content>
             //  ==========
             var reader = new StreamReader(stream, Encoding.UTF8);
-            while (!reader.EndOfStream)
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                var line = reader.ReadLine();
-
-                // if (line == null || !line.StartsWith(AnnotationBeginMarker))
-                if (line == null)
-                {
-                    continue;
-                }
-
                 // We have an annotation block. Start processing!
                 yield return new Clipping()
                     .ParseBookInfo(line)
@@ -58,12 +50,6 @@ namespace Noted.Extensions.Libraries.Kindle
 
         public static Clipping ParseBookInfo(this Clipping clipping, string line)
         {
-            // if (!line.StartsWith(AnnotationBeginMarker))
-            // {
-            //     throw new InvalidClippingException(
-            //         "Book information line doesn't begin with Annotation Marker",
-            //         line);
-            // }
             var match = BookInfoRegex.Match(line);
             if (!match.Success)
             {
