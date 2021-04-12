@@ -62,7 +62,7 @@ namespace Noted.Core
                 .SelectMany(r => r.SupportedExtensions.Select(ext => (ext, r)))
                 .ToDictionary(r => $".{r.ext}", r => r.r);
 
-            foreach (var file in this.EnumerateDocuments(configuration.SourcePath))
+            foreach (var file in this.EnumerateDocuments(configuration.SourcePath, readersWithExtension.Keys))
             {
                 if (!readersWithExtension.TryGetValue(
                     Path.GetExtension(file),
@@ -93,9 +93,9 @@ namespace Noted.Core
             return Task.FromResult(0);
         }
 
-        private IEnumerable<string> EnumerateDocuments(string sourcePath)
+        private IEnumerable<string> EnumerateDocuments(string sourcePath, IEnumerable<string> extensions)
         {
-            var supportedExtensions = "(pdf|epub|azw3|mobi)";
+            var supportedExtensions = $"({string.Join('|', extensions)})";
             if (this.fileSystem.IsDirectory(sourcePath))
             {
                 return this.fileSystem.GetFiles(sourcePath, supportedExtensions);

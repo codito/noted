@@ -38,11 +38,13 @@ namespace Noted
                 {
                     new MarkdownWriter()
                 });
+            var workflows = new Dictionary<string, IWorkflow>
+                { { "default", new ExtractWorkflow(fileSystem) } };
 
             return await new ConsoleInterface()
                 .WithArguments(args)
                 .WithConfigurationProvider(configurationProvider)
-                .WithWorkflows(new Dictionary<string, IWorkflow> { { "default", new ExtractWorkflow(fileSystem) } })
+                .WithWorkflows(workflows)
                 .RunAsync();
         }
     }

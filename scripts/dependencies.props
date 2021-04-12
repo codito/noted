@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!-- Product dependencies -->
-    <EphemeralityUnpackVersion>0.0.2</EphemeralityUnpackVersion>
-    <HtmlAgilityPackVersion>1.11.30</HtmlAgilityPackVersion>
-    <JTForksMiscUtilVersion>1.285.0</JTForksMiscUtilVersion>
-    <MarkdigVersion>0.23.0</MarkdigVersion>
-    <MobiToolkitVersion>1.0.4</MobiToolkitVersion>
-    <PdfPigVersion>0.1.4</PdfPigVersion>
-    <!-- Use Crayon or Pastel for console output -->
-    <SystemCommandLineVersion>2.0.0-beta1.20574.7</SystemCommandLineVersion>
-    <VersoneEpubVersion>3.0.3.1</VersoneEpubVersion>
-
-    <!-- Test dependencies -->
-    <MSTestVersion>2.1.1</MSTestVersion>
-    <NETTestSdkVersion>16.7.1</NETTestSdkVersion>
-    <MoqVersion>4.16.1</MoqVersion>
-    <CoverletVersion>3.0.2</CoverletVersion>
-
     <!-- Static analysis -->
-    <StylecopVersion>1.2.0-beta.321</StylecopVersion>
+    <StylecopVersion>1.2.0-beta.333</StylecopVersion>
   </PropertyGroup>
 </Project>

@@ -7,28 +7,25 @@ namespace Noted.Extensions.Readers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Ephemerality.Unpack.Mobi;
+    using Ephemerality.Unpack.KFX;
     using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
-    using Noted.Extensions.Readers.Mobi;
 
-    public class MobiReader : IDocumentReader
+    public class KfxReader : IDocumentReader
     {
-        // TODO add support for azw3
-        public List<string> SupportedExtensions => new() { "mobi" };
+        public List<string> SupportedExtensions => new() { "kfx" };
 
         public Document Read(
             Stream stream,
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
         {
-            var mobi = new MobiMetadata(stream);
-            var text = new StreamReader(mobi.GetRawMlStream()).ReadToEnd();
+            var kfx = new KfxContainer(stream);
             var docRef = new DocumentReference
             {
-                Title = mobi.Title,
-                Author = mobi.Author
+                Title = kfx.Title,
+                Author = kfx.Author
             };
 
             Console.WriteLine($"Book: {docRef.Title}");
@@ -39,28 +36,12 @@ namespace Noted.Extensions.Readers
                 .OrderBy(p => p.Location, new RangeComparer())
                 .ToList();
 
-            // var annotations = FullTextContextStrategy.AddContext(
-            //     text,
-            //     externalAnnotations);
-            var sections = NodeContextStrategy.ExtractSections(text);
-            var createdDate = DateTime.UnixEpoch;
-            var modifiedDate = DateTime.UnixEpoch;
-            var annotations = NodeContextStrategy.AddContext(
-                text,
-                sections,
-                externalAnnotations,
-                ref createdDate,
-                ref modifiedDate);
+            var contents = kfx.GetContentChunks()
+                .Where(contentChunk => contentChunk.ContentText != null)
+                .Select(x => new { x.ContentName, x.ContentText })
+                .ToList();
 
-            return new()
-            {
-                Title = docRef.Title,
-                Author = docRef.Author,
-                CreatedDate = createdDate,
-                ModifiedDate = modifiedDate,
-                Annotations = annotations,
-                Sections = sections
-            };
+            return new Document();
         }
 
         private class RangeComparer : IComparer<Range>
