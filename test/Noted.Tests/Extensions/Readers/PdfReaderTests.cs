@@ -34,6 +34,12 @@ namespace Noted.Tests.Extensions.Readers
         }
 
         [TestMethod]
+        public void PdfReaderShouldSupportOnlyPdfFileExtension()
+        {
+            CollectionAssert.AreEqual(new[] { "pdf" }, this.reader.SupportedExtensions);
+        }
+
+        [TestMethod]
         public void PdfReaderShouldThrowIfStreamIsInvalid()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
