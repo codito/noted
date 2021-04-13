@@ -26,6 +26,6 @@ namespace Noted.Core.Models
         /// <summary>
         /// Gets or sets a sorted list of section headings in the Document.
         /// </summary>
-        public IEnumerable<Section> Sections { get; set; }
+        public IEnumerable<DocumentNavigation> Sections { get; set; }
     }
 }

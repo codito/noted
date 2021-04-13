@@ -32,7 +32,8 @@ namespace Noted
                 {
                     new PdfReader(),
                     new EpubReader(),
-                    new MobiReader()
+                    new MobiReader(),
+                    new KfxReader()
                 })
                 .WithWriters(new List<IDocumentWriter>
                 {

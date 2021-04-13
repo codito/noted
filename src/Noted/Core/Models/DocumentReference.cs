@@ -8,5 +8,7 @@ namespace Noted.Core.Models
         public string Title { get; init; }
 
         public string Author { get; init; }
+
+        // TODO Add support for matching Asin or ISBN or DOI
     }
 }

@@ -79,6 +79,9 @@ namespace Noted.Core
                     new ReaderOptions(),
                     docRef =>
                     {
+                        // TODO add fuzzy match between title, author and direct match
+                        // with ISBN or ASIN or DOI
+                        // Consider https://github.com/DanHarltey/Fastenshtein
                         if (externalAnnotations.TryGetValue(docRef, out var annotations))
                         {
                             return annotations.ToList();

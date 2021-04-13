@@ -13,10 +13,10 @@ namespace Noted.Extensions.Readers.Mobi
 
     public class NodeContextStrategy
     {
-        public static List<Annotation> AddContext(
+        public static IEnumerable<Annotation> AddContext(
             string contentHtml,
-            List<Section> sections,
-            List<(Range Location, Annotation Annotation)> externalAnnotations,
+            List<DocumentNavigation> sections,
+            IEnumerable<(Range Location, Annotation Annotation)> externalAnnotations,
             ref DateTime createdDate,
             ref DateTime modifiedDate)
         {
@@ -29,10 +29,10 @@ namespace Noted.Extensions.Readers.Mobi
             var textIndex = 0;
             var sectionIndex = 0;
             var textNodeMap = new Dictionary<int, int>();
-            var textSectionMap = new Dictionary<int, Section>();
+            var textSectionMap = new Dictionary<int, DocumentNavigation>();
 
             // Convert the entire book into a concatenated string. This is necessary to enable
-            // search of annotations that span multiple lines.
+            // search for annotations that span multiple lines.
             // Create two maps:
             //  textIndex -> nodeIndex
             //  textIndex -> sectionIndex
@@ -111,7 +111,7 @@ namespace Noted.Extensions.Readers.Mobi
                             sectionMapKeys,
                             0,
                             startIndex);
-                        pair.Annotation.Context.Section =
+                        pair.Annotation.Context.DocumentNavigation =
                             textSectionMap[sectionMapKeys[headerNode.Index]];
                     }
                 }
@@ -215,7 +215,7 @@ namespace Noted.Extensions.Readers.Mobi
                             headerMapKeys,
                             0,
                             startIndex);
-                        pair.Annotation.Context.Section = new Section
+                        pair.Annotation.Context.DocumentNavigation = new DocumentNavigation
                         {
                             Title = headerTextMap[
                                 headerMapKeys[headerNode.Index]]
@@ -229,7 +229,7 @@ namespace Noted.Extensions.Readers.Mobi
             return annotations;
         }
 
-        public static List<Section> ExtractSections(string contentHtml)
+        private static List<DocumentNavigation> ExtractSections(string contentHtml)
         {
             // Table of Contents for a book are marked with below node
             //   <reference title="Table of Contents" type="toc" filepos=0000000434 />
@@ -245,14 +245,14 @@ namespace Noted.Extensions.Readers.Mobi
             var tocNode = refNodes?.FirstOrDefault(n => n.Attributes["type"].Value == "toc");
             if (tocNode == null)
             {
-                return new List<Section>();
+                return new List<DocumentNavigation>();
             }
 
             var tocFilePos = int.Parse(tocNode.Attributes["filepos"].Value);
             if (tocFilePos > contentHtml.Length)
             {
                 // Malformed book: TOC is beyond the book text
-                return new List<Section>();
+                return new List<DocumentNavigation>();
             }
 
             var tocContentStart = contentHtml.LastIndexOf(
@@ -272,7 +272,7 @@ namespace Noted.Extensions.Readers.Mobi
             return tocContentHtml.DocumentNode
                 .SelectNodes("//a")
                 .Where(n => n.Attributes.Contains("filepos"))
-                .Select(n => new Section
+                .Select(n => new DocumentNavigation
                     {
                         Title = n.InnerText,
                         Location = int.Parse(n.Attributes["filepos"].Value)

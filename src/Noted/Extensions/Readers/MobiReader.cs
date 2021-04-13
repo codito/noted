@@ -12,6 +12,7 @@ namespace Noted.Extensions.Readers
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Extensions.Readers.Mobi;
+    using Noted.Extensions.Readers.Navigation;
 
     public class MobiReader : IDocumentReader
     {
@@ -39,10 +40,19 @@ namespace Noted.Extensions.Readers
                 .OrderBy(p => p.Location, new RangeComparer())
                 .ToList();
 
+            // TODO
+            // Table of Contents in AZW3 and MOBI differ in significant ways. MOBI adds
+            // a toc as a meta/guide at the end of a book. AZW3 provides navigation information
+            // in a ncx stream (parsed similar to a epub)
+            // https://wiki.mobileread.com/wiki/NCX
             // var annotations = FullTextContextStrategy.AddContext(
             //     text,
             //     externalAnnotations);
-            var sections = NodeContextStrategy.ExtractSections(text);
+            var tocStream = new Mobi7Parser().GetNavigationStream(mobi.GetRawMlStream()).Result;
+            var sections = new HtmlTableOfContentParser()
+                .Parse(tocStream)
+                .ToListAsync()
+                .Result;
             var createdDate = DateTime.UnixEpoch;
             var modifiedDate = DateTime.UnixEpoch;
             var annotations = NodeContextStrategy.AddContext(
