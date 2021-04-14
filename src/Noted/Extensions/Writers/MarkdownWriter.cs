@@ -29,10 +29,12 @@ namespace Noted.Extensions.Writers
             foreach (var annotation in document.Annotations)
             {
                 // Print section header
+                // TODO option for including empty headers
                 while (sectionIterator.Current != null &&
                        sectionIterator.Current.Location <= annotation.Context.Location)
                 {
-                    writer.WriteLine($"## {sectionIterator.Current.Title}");
+                    var heading = sectionIterator.Current;
+                    writer.WriteLine($"{new string('#', heading.Level)} {heading.Title}");
                     writer.WriteLine();
                     sectionIterator.MoveNext();
                 }

@@ -14,17 +14,38 @@ namespace Noted.Tests.Extensions.Readers
     public class MobiReaderTests
     {
         [TestMethod]
+        public void MobiReaderShouldSupportMobiFileExtensions()
+        {
+            var reader = new MobiReader();
+
+            CollectionAssert.AreEquivalent(new[] { "mobi" }, reader.SupportedExtensions);
+        }
+
+        [TestMethod]
         public void MobiReaderShouldParseAnnotationsAndTableOfContent()
         {
             using var stream = AssetFactory.GetAsset("pg42324.mobi");
             var reader = new MobiReader();
+            var annotations = new List<Annotation>
+            {
+                new()
+                {
+                    Content =
+                        "Nothing is so painful to the human mind as a great and sudden change.",
+                    Context = new AnnotationContext
+                    {
+                        PageNumber = 380,
+                        SerializedLocation = "line://925-994"
+                    }
+                }
+            };
 
             var document = reader.Read(
                 stream,
                 new ReaderOptions(),
-                docRef => new List<Annotation>());
+                _ => annotations);
 
-            Assert.AreEqual(0, document.Annotations.Count());
+            Assert.AreEqual(1, document.Annotations.Count());
         }
     }
 }
