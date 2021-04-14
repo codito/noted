@@ -1,7 +1,7 @@
 // Copyright (c) Arun Mahapatra. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Noted.Extensions.Readers.Navigation
+namespace Noted.Extensions.Readers.Common
 {
     using System.Collections.Generic;
     using System.IO;
@@ -10,9 +10,9 @@ namespace Noted.Extensions.Readers.Navigation
     using AngleSharp.Html.Dom;
     using Noted.Core.Models;
 
-    public class HtmlTableOfContentParser
+    public class HtmlSectionParser
     {
-        public async IAsyncEnumerable<DocumentNavigation> Parse(Stream stream)
+        public async IAsyncEnumerable<DocumentSection> Parse(Stream stream)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
@@ -46,7 +46,7 @@ namespace Noted.Extensions.Readers.Navigation
                     levelSet[depth] = level;
                 }
 
-                yield return new DocumentNavigation
+                yield return new DocumentSection
                 {
                     Title = node.Text(),
                     Level = level,

@@ -7,8 +7,8 @@ namespace Noted.Tests.Extensions.Readers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Extensions.Readers;
@@ -24,7 +24,7 @@ namespace Noted.Tests.Extensions.Readers
             "Now, the things within our power are by nature free, unrestricted, unhindered; but those beyond our power are weak, dependent, restricted, alien. Remember, then, that if you attribute freedom to things by nature dependent, and take what belongs to others for your own, you will be hindered, you will lament, you will be disturbed, you will find fault both with gods and men. But if you take for your own only that which is your own, and view what belongs to others just as it really is, then no one will ever compel you, no one will restrict you, you will find fault with no one, you will accuse no one, you will do nothing against your will; no one will hurt you, you will not have an enemy, nor will you suffer any harm.";
 
         private readonly PdfReader reader;
-        private Func<DocumentReference, List<Annotation>> emptyExternalAnnotations;
+        private readonly Func<DocumentReference, List<Annotation>> emptyExternalAnnotations;
 
         public PdfReaderTests()
         {
@@ -57,13 +57,13 @@ namespace Noted.Tests.Extensions.Readers
         }
 
         [TestMethod]
-        public void ReadShouldParseDocumentMetadata()
+        public async Task ReadShouldParseDocumentMetadata()
         {
-            using var stream = new MemoryStream();
+            await using var stream = new MemoryStream();
             stream.Write(CreatePdfWithMetadata());
             stream.Seek(0, SeekOrigin.Begin);
 
-            var document = this.reader.Read(stream, new ReaderOptions(), this.emptyExternalAnnotations);
+            var document = await this.reader.Read(stream, new ReaderOptions(), this.emptyExternalAnnotations);
 
             Assert.IsNotNull(document);
             Assert.AreEqual("Sample title", document.Title);
@@ -74,11 +74,11 @@ namespace Noted.Tests.Extensions.Readers
         }
 
         [TestMethod]
-        public void ReadShouldParseSingleColumnLayoutDocument()
+        public async Task ReadShouldParseSingleColumnLayoutDocument()
         {
-            using var fs = new FileStream("single column.pdf", FileMode.Open);
+            await using var fs = new FileStream("single column.pdf", FileMode.Open);
 
-            var document = this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
+            var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 
             var annotations = document.Annotations.ToList();
             Assert.AreEqual(2, annotations.Count);
@@ -92,11 +92,11 @@ namespace Noted.Tests.Extensions.Readers
         }
 
         [TestMethod]
-        public void ReadShouldParseTwoColumnLayoutDocument()
+        public async Task ReadShouldParseTwoColumnLayoutDocument()
         {
-            using var fs = new FileStream("two column.pdf", FileMode.Open);
+            await using var fs = new FileStream("two column.pdf", FileMode.Open);
 
-            var document = this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
+            var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 
             var annotations = document.Annotations.ToList();
             Assert.AreEqual(5, annotations.Count);

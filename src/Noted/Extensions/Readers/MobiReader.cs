@@ -7,18 +7,19 @@ namespace Noted.Extensions.Readers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using Ephemerality.Unpack.Mobi;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Extensions.Readers.Common;
     using Noted.Extensions.Readers.Mobi;
-    using Noted.Extensions.Readers.Navigation;
 
     public class MobiReader : IDocumentReader
     {
         // TODO add support for azw3
         public List<string> SupportedExtensions => new() { "mobi" };
 
-        public Document Read(
+        public async Task<Document> Read(
             Stream stream,
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
@@ -48,18 +49,13 @@ namespace Noted.Extensions.Readers
             //     text,
             //     externalAnnotations);
             var tocStream = new Mobi7Parser().GetNavigationStream(mobi.GetRawMlStream()).Result;
-            var sections = new HtmlTableOfContentParser()
+            var sections = await new HtmlSectionParser()
                 .Parse(tocStream)
-                .ToListAsync()
-                .Result;
-            var createdDate = DateTime.UnixEpoch;
-            var modifiedDate = DateTime.UnixEpoch;
-            var annotations = NodeContextStrategy.AddContext(
+                .ToListAsync();
+            var (annotations, createdDate, modifiedDate) = await new HtmlContextParser().AddContext(
                 text,
                 sections,
-                externalAnnotations,
-                ref createdDate,
-                ref modifiedDate);
+                externalAnnotations);
 
             return new Document
             {

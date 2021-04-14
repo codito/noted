@@ -7,6 +7,7 @@ namespace Noted.Extensions.Readers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using Ephemerality.Unpack.KFX;
     using Noted.Core;
     using Noted.Core.Extensions;
@@ -16,7 +17,7 @@ namespace Noted.Extensions.Readers
     {
         public List<string> SupportedExtensions => new() { "kfx" };
 
-        public Document Read(
+        public Task<Document> Read(
             Stream stream,
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
@@ -41,7 +42,7 @@ namespace Noted.Extensions.Readers
                 .Select(x => new { x.ContentName, x.ContentText })
                 .ToList();
 
-            return new Document();
+            return Task.FromResult(new Document());
         }
     }
 }

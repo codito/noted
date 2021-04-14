@@ -5,6 +5,7 @@ namespace Noted.Tests.Extensions.Readers
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
@@ -22,9 +23,9 @@ namespace Noted.Tests.Extensions.Readers
         }
 
         [TestMethod]
-        public void MobiReaderShouldParseAnnotationsAndTableOfContent()
+        public async Task MobiReaderShouldParseAnnotationsAndTableOfContent()
         {
-            using var stream = AssetFactory.GetAsset("pg42324.mobi");
+            await using var stream = AssetFactory.GetAsset("pg42324.mobi");
             var reader = new MobiReader();
             var annotations = new List<Annotation>
             {
@@ -40,7 +41,7 @@ namespace Noted.Tests.Extensions.Readers
                 }
             };
 
-            var document = reader.Read(
+            var document = await reader.Read(
                 stream,
                 new ReaderOptions(),
                 _ => annotations);

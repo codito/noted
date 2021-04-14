@@ -7,8 +7,9 @@ namespace Noted.Extensions.Readers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using HtmlAgilityPack;
-    using Noted.Core;
+    using System.Threading.Tasks;
+    using AngleSharp.Html.Parser;
+    using AngleSharp.XPath;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using VersOne.Epub;
@@ -17,12 +18,12 @@ namespace Noted.Extensions.Readers
     {
         public List<string> SupportedExtensions => new() { "epub" };
 
-        public Document Read(
+        public async Task<Document> Read(
             Stream stream,
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
         {
-            var epub = VersOne.Epub.EpubReader.ReadBook(stream);
+            var epub = await VersOne.Epub.EpubReader.ReadBookAsync(stream);
             var docRef = new DocumentReference
             {
                 Title = epub.Title,
@@ -40,11 +41,14 @@ namespace Noted.Extensions.Readers
             var line = 1;
             foreach (EpubTextContentFile textContentFile in epub.ReadingOrder)
             {
-                var htmlDocument = new HtmlDocument();
-                htmlDocument.LoadHtml(textContentFile.Content);
-                foreach (var node in htmlDocument.DocumentNode.SelectNodes("//text()"))
+                var parser = new HtmlParser(new HtmlParserOptions
                 {
-                    content.Add(line++, node.InnerText.Trim());
+                    IsKeepingSourceReferences = true
+                });
+                var document = await parser.ParseDocumentAsync(textContentFile.Content);
+                foreach (var node in document.Body.SelectNodes("//text()"))
+                {
+                    content.Add(line++, node.TextContent.Trim());
                 }
             }
 
@@ -56,19 +60,11 @@ namespace Noted.Extensions.Readers
                 Console.WriteLine("------------------");
             }
 
-            return new()
+            return new Document
             {
                 Title = docRef.Title,
                 Author = docRef.Author,
             };
-        }
-
-        private class RangeComparer : IComparer<Range>
-        {
-            public int Compare(Range x, Range y)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

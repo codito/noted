@@ -7,7 +7,7 @@ namespace Noted.Core.Models
     /// Represents a navigation element in the Document. E.g. a chapter,
     /// or sections within a chapter.
     /// </summary>
-    public class DocumentNavigation
+    public class DocumentSection
     {
         /// <summary>
         /// Gets or sets the title or heading for the section.

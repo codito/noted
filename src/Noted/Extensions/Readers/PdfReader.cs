@@ -8,6 +8,7 @@ namespace Noted.Extensions.Readers
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using UglyToad.PdfPig;
@@ -23,7 +24,7 @@ namespace Noted.Extensions.Readers
     {
         public List<string> SupportedExtensions => new() { "pdf" };
 
-        public Document Read(
+        public Task<Document> Read(
             Stream stream,
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
@@ -77,7 +78,7 @@ namespace Noted.Extensions.Readers
             }
 
             DateTime.TryParse(doc.Information.ModifiedDate, out var modifiedDate);
-            return new Document
+            return Task.FromResult(new Document
             {
                 Title = docReference.Title,
                 Author = docReference.Author,
@@ -85,7 +86,7 @@ namespace Noted.Extensions.Readers
                 Keywords = doc.Information.Keywords,
                 ModifiedDate = modifiedDate,
                 Annotations = annotations
-            };
+            });
         }
 
         private static string GetTextInRegion(IEnumerable<Word> words, PdfRectangle rect)

@@ -11,8 +11,6 @@ namespace Noted.Core
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
-    using Noted.Extensions.Writers;
-    using Noted.Platform.IO;
 
     /// <summary>
     /// Workflow to extract annotations from files or directory (batch mode) and
@@ -46,7 +44,7 @@ namespace Noted.Core
         //          3.2.3 Extract bookmarks and headers as context
         //  4. Create AnnotationCollection for each Document
         //  5. Export annotations to output
-        public Task<int> RunAsync(Configuration configuration)
+        public async Task<int> RunAsync(Configuration configuration)
         {
             // Extract external annotations for the library
             var externalAnnotations = configuration
@@ -73,8 +71,8 @@ namespace Noted.Core
                 }
 
                 // TODO extract file scoped external annotations (KOReader)
-                using var stream = this.fileSystem.OpenPathForRead(file);
-                var document = reader.Read(
+                await using var stream = this.fileSystem.OpenPathForRead(file);
+                var document = await reader.Read(
                     stream,
                     new ReaderOptions(),
                     docRef =>
@@ -93,7 +91,7 @@ namespace Noted.Core
                 this.WriteDocument(document, configuration);
             }
 
-            return Task.FromResult(0);
+            return 0;
         }
 
         private IEnumerable<string> EnumerateDocuments(string sourcePath, IEnumerable<string> extensions)

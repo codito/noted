@@ -6,6 +6,7 @@ namespace Noted.Core.Extensions
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using Noted.Core.Models;
 
@@ -28,6 +29,6 @@ namespace Noted.Core.Extensions
         /// <param name="options">Options for the reader.</param>
         /// <param name="fetchExternalAnnotations">Function to fetch external annotations for a Document.</param>
         /// <returns>Document with metadata and annotations.</returns>
-        Document Read(Stream stream, ReaderOptions options, Func<DocumentReference, List<Annotation>> fetchExternalAnnotations);
+        Task<Document> Read(Stream stream, ReaderOptions options, Func<DocumentReference, List<Annotation>> fetchExternalAnnotations);
     }
 }

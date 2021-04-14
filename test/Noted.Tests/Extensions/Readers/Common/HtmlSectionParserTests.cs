@@ -1,17 +1,17 @@
 // Copyright (c) Arun Mahapatra. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Noted.Tests.Extensions.Readers.Navigation
+namespace Noted.Tests.Extensions.Readers.Common
 {
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Noted.Extensions.Readers.Navigation;
+    using Noted.Extensions.Readers.Common;
 
     [TestClass]
-    public class HtmlTableOfContentParserTests
+    public class HtmlSectionParserTests
     {
         private const string TocFragment = @"
 <p height=""1em"" width=""0pt"" align=""center"">
@@ -55,11 +55,11 @@ namespace Noted.Tests.Extensions.Readers.Navigation
 <mbp:pagebreak/>
 ";
 
-        private readonly HtmlTableOfContentParser parser;
+        private readonly HtmlSectionParser parser;
 
-        public HtmlTableOfContentParserTests()
+        public HtmlSectionParserTests()
         {
-            this.parser = new HtmlTableOfContentParser();
+            this.parser = new HtmlSectionParser();
         }
 
         [TestMethod]

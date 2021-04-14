@@ -13,7 +13,7 @@ namespace Noted.Core.Models
         /// <summary>
         /// Gets or sets document section for this annotation.
         /// </summary>
-        public DocumentNavigation DocumentNavigation { get; set; }
+        public DocumentSection DocumentSection { get; set; }
 
         /// <summary>
         /// Gets or sets the annotation location relative to beginning of Document.

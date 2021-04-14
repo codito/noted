@@ -13,8 +13,8 @@
   <ItemGroup>
     <!-- Use Crayon or Pastel for console output -->
     <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <PackageReference Include="AngleSharp.XPath" Version="1.1.7" />
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.2" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
     <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
     <PackageReference Include="Markdig" Version="0.23.0" />
     <PackageReference Include="PdfPig" Version="0.1.4" />
