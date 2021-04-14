@@ -9,6 +9,7 @@ namespace Noted.Extensions.Readers.Mobi
     using System.Text;
     using System.Web;
     using HtmlAgilityPack;
+    using Noted.Core;
     using Noted.Core.Models;
 
     public class NodeContextStrategy
@@ -16,7 +17,7 @@ namespace Noted.Extensions.Readers.Mobi
         public static IEnumerable<Annotation> AddContext(
             string contentHtml,
             List<DocumentNavigation> sections,
-            IEnumerable<(Range Location, Annotation Annotation)> externalAnnotations,
+            IEnumerable<(LineLocation Location, Annotation Annotation)> externalAnnotations,
             ref DateTime createdDate,
             ref DateTime modifiedDate)
         {

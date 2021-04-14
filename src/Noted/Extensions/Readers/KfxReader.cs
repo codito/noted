@@ -31,9 +31,9 @@ namespace Noted.Extensions.Readers
             Console.WriteLine($"Book: {docRef.Title}");
             var externalAnnotations = fetchExternalAnnotations(docRef)
                 .Select(a => (
-                    Location: LineLocationScheme.FromString(a.Context.SerializedLocation),
+                    Location: LineLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))
-                .OrderBy(p => p.Location, new RangeComparer())
+                .OrderBy(p => p.Location)
                 .ToList();
 
             var contents = kfx.GetContentChunks()
@@ -42,14 +42,6 @@ namespace Noted.Extensions.Readers
                 .ToList();
 
             return new Document();
-        }
-
-        private class RangeComparer : IComparer<Range>
-        {
-            public int Compare(Range x, Range y)
-            {
-                return x.Start.Value.CompareTo(y.Start.Value);
-            }
         }
     }
 }

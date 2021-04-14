@@ -23,7 +23,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
                 Content = "Sample highlighted content",
                 CreationDate = new DateTime(2019, 08, 15, 10, 48, 48),
                 PageNumber = 90,
-                Location = new Range(new(10), new(12)),
+                Location = new LineLocation(10, 12),
                 Type = type
             };
 

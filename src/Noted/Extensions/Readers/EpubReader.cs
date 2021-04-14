@@ -31,7 +31,7 @@ namespace Noted.Extensions.Readers
 
             var externalAnnotations = fetchExternalAnnotations(docRef)
                 .Select(a => (
-                    Location: LineLocationScheme.FromString(a.Context.SerializedLocation),
+                    Location: LineLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))
                 .OrderBy(p => p.Location)
                 .ToList();
@@ -52,7 +52,7 @@ namespace Noted.Extensions.Readers
             {
                 Console.WriteLine(pair.Annotation.Content);
                 Console.WriteLine(":::");
-                Console.WriteLine(content[pair.Location.Start.Value]);
+                Console.WriteLine(content[pair.Location.Start]);
                 Console.WriteLine("------------------");
             }
 

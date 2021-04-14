@@ -8,6 +8,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
     using System.Linq;
     using System.Text;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Noted.Core.Models;
     using Noted.Extensions.Libraries.Kindle;
 
     [TestClass]
@@ -55,8 +56,8 @@ Affordances refer to the potential actions that are possible, but these are easi
             Assert.AreEqual("Norman, Don", clippings[0].Author);
             Assert.AreEqual(ClippingType.Highlight, clippings[0].Type);
             Assert.AreEqual(145, clippings[0].PageNumber);
-            Assert.AreEqual(3015, clippings[0].Location.Start.Value);
-            Assert.AreEqual(3016, clippings[0].Location.End.Value);
+            Assert.AreEqual(3015, clippings[0].Location.Start);
+            Assert.AreEqual(3016, clippings[0].Location.End);
             Assert.AreEqual(new DateTime(2019, 08, 15, 10, 14, 40), clippings[0].CreationDate);
             Assert.IsTrue(clippings[0].Content.StartsWith("Forcing functions can be"));
 
@@ -84,12 +85,12 @@ Affordances refer to the potential actions that are possible, but these are easi
 
             Assert.AreEqual(2, clippings.Count);
             Assert.AreEqual(-1, clippings[0].PageNumber);
-            Assert.AreEqual(3026, clippings[0].Location.Start.Value);
-            Assert.AreEqual(3026, clippings[0].Location.End.Value);
+            Assert.AreEqual(3026, clippings[0].Location.Start);
+            Assert.AreEqual(3026, clippings[0].Location.End);
 
             Assert.AreEqual(-1, clippings[1].PageNumber);
-            Assert.AreEqual(3026, clippings[1].Location.Start.Value);
-            Assert.AreEqual(3027, clippings[1].Location.End.Value);
+            Assert.AreEqual(3026, clippings[1].Location.Start);
+            Assert.AreEqual(3027, clippings[1].Location.End);
         }
 
         [TestMethod]
@@ -136,7 +137,7 @@ Affordances refer to the potential actions that are possible, but these are easi
             Assert.IsNotNull(clip);
             Assert.AreEqual(type, clip.Type);
             Assert.AreEqual(12, clip.PageNumber);
-            Assert.AreEqual(new Range(new Index(100), new Index(120)), clip.Location);
+            Assert.AreEqual(new LineLocation(100, 120), clip.Location);
             Assert.AreEqual(new DateTime(2019, 08, 15, 10, 17, 58), clip.CreationDate);
         }
 

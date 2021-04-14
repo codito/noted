@@ -9,6 +9,7 @@ namespace Noted.Extensions.Libraries.Kindle
     using System.IO;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Noted.Core.Models;
     using Noted.Platform.IO;
 
     public static class ClippingParser
@@ -90,14 +91,14 @@ namespace Noted.Extensions.Libraries.Kindle
                 clipping.Type = Enum.Parse<ClippingType>(match.Groups["annotationType"].Value);
                 clipping.CreationDate = DateTime.ParseExact(match.Groups["date"].Value, "F", CultureInfo.CreateSpecificCulture("en-US"));
 
-                var startIndex = new Index(int.Parse(match.Groups["startLoc"].Value));
+                var startIndex = int.Parse(match.Groups["startLoc"].Value);
                 var endIndex = startIndex;
                 if (match.Groups["endLoc"].Success)
                 {
-                    endIndex = new(int.Parse(match.Groups["endLoc"].Value));
+                    endIndex = int.Parse(match.Groups["endLoc"].Value);
                 }
 
-                clipping.Location = new Range(startIndex, endIndex);
+                clipping.Location = new LineLocation(startIndex, endIndex);
                 if (match.Groups["pageNumber"].Success)
                 {
                     clipping.PageNumber = int.Parse(match.Groups["pageNumber"].Value);

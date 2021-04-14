@@ -4,6 +4,8 @@
 namespace Noted.Extensions.Libraries.Kindle
 {
     using System;
+    using Noted.Core;
+    using Noted.Core.Models;
 
     public class Clipping
     {
@@ -17,7 +19,7 @@ namespace Noted.Extensions.Libraries.Kindle
 
         public int PageNumber { get; set; }
 
-        public Range Location { get; set; }
+        public LineLocation Location { get; set; }
 
         public DateTime CreationDate { get; set; }
 

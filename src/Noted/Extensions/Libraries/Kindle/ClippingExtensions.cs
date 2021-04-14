@@ -15,7 +15,7 @@ namespace Noted.Extensions.Libraries.Kindle
                 Content = clipping.Content,
                 Context = new AnnotationContext
                 {
-                    SerializedLocation = LineLocationScheme.ToString(clipping.Location),
+                    SerializedLocation = LineLocation.ToString(clipping.Location),
                     PageNumber = clipping.PageNumber
                 },
                 CreatedDate = clipping.CreationDate,
