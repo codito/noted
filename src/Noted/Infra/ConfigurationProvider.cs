@@ -50,7 +50,7 @@ namespace Noted.Infra
                 SourcePath = this.commandLineConfig.SourcePath,
                 OutputPath = this.commandLineConfig.OutputPath,
                 ExtractionContextLength = this.commandLineConfig.ExtractionContextLength,
-                ExtractionHeaderDepth = this.commandLineConfig.ExtractionHeaderDepth,
+                ExtractDocumentSections = this.commandLineConfig.ExtractDocumentSections,
                 TreatSourceAsLibrary = this.commandLineConfig.TreatSourceAsLibrary,
 
                 AnnotationProviders = this.annotationReaders,

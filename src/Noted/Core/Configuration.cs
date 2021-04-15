@@ -11,15 +11,15 @@ namespace Noted.Core
     /// </summary>
     public class Configuration
     {
-        public byte ExtractionContextLength { get; init; } = 0;
+        public byte ExtractionContextLength { get; init; }
 
-        public byte ExtractionHeaderDepth { get; init; } = 3;
+        public bool ExtractDocumentSections { get; init; } = true;
 
         public string SourcePath { get; init; }
 
         public string OutputPath { get; init; }
 
-        public bool TreatSourceAsLibrary { get; init; } = false;
+        public bool TreatSourceAsLibrary { get; init; }
 
 #region Dependencies
         public List<IAnnotationProvider> AnnotationProviders

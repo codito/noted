@@ -46,16 +46,16 @@ namespace Noted.Infra
                 () => 0,
                 "extract <context> lines of text before and after the annotation");
             contextOption.AddAlias("-c");
-            var headerOption = new Option<byte>(
-                "--header-depth",
-                () => 4,
-                "capture <header-depth> count of section headings from table of contents");
-            headerOption.AddAlias("-s");
+            var tocOption = new Option<bool>(
+                "--toc",
+                () => true,
+                "extract table of contents and align annotations");
+            tocOption.AddAlias("-t");
 
             var rootCommand = new RootCommand
             {
                 contextOption,
-                headerOption,
+                tocOption,
                 new Argument<string>(
                     "sourcePath",
                     "Source document or directory of documents to extract annotations"),
@@ -80,9 +80,9 @@ namespace Noted.Infra
 
         private class CommandLineArguments
         {
-            public byte HeaderDepth { get; set; }
-
             public byte Context { get; set; }
+
+            public bool ExtractDocumentSections { get; set; }
 
             public string SourcePath { get; set; }
 
@@ -107,7 +107,7 @@ namespace Noted.Infra
                 return new()
                 {
                     ExtractionContextLength = this.Context,
-                    ExtractionHeaderDepth = this.HeaderDepth,
+                    ExtractDocumentSections = this.ExtractDocumentSections,
                     SourcePath = this.SourcePath,
                     OutputPath = this.OutputPath,
                     TreatSourceAsLibrary = sourceAsLibrary

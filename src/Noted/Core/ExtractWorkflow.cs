@@ -77,9 +77,6 @@ namespace Noted.Core
                     new ReaderOptions(),
                     docRef =>
                     {
-                        // TODO add fuzzy match between title, author and direct match
-                        // with ISBN or ASIN or DOI
-                        // Consider https://github.com/DanHarltey/Fastenshtein
                         if (externalAnnotations.TryGetValue(docRef, out var annotations))
                         {
                             return annotations.ToList();
@@ -91,6 +88,7 @@ namespace Noted.Core
                         return key == null ? new List<Annotation>() : externalAnnotations[key].ToList();
                     });
 
+                document.Source = file;
                 await this.WriteDocument(document, configuration);
             }
 
@@ -114,9 +112,12 @@ namespace Noted.Core
         {
             var writer = configuration.Writers.Single();
             var outputPath = configuration.OutputPath;
-            if (configuration.TreatSourceAsLibrary)
+            if (configuration.TreatSourceAsLibrary || this.fileSystem.IsDirectory(outputPath))
             {
-                outputPath = Path.Combine(configuration.OutputPath, $"{document.Title}.md");
+                var docName = string.IsNullOrEmpty(document.Source)
+                    ? document.Title
+                    : Path.GetFileName(document.Source);
+                outputPath = Path.Combine(configuration.OutputPath, $"{docName}.md");
             }
 
             await using var stream = this.fileSystem.OpenPathForWrite(outputPath);
