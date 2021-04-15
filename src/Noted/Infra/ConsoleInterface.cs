@@ -64,15 +64,28 @@ namespace Noted.Infra
                     "Destination file or directory")
             };
 
-            rootCommand.Name = "extract";
+            // rootCommand.Name = "extract";
             rootCommand.Description = "Extracts highlights and notes from documents and save them as markdown";
             rootCommand.Handler = CommandHandler.Create<CommandLineArguments>(cliArgs =>
             {
-                var configuration = this.configurationProvider
-                    .WithConfiguration(cliArgs.ToConfiguration())
-                    .Build();
-                return this.workflows.Single().Value
-                    .RunAsync(configuration);
+                try
+                {
+                    var configuration = this.configurationProvider
+                        .WithConfiguration(cliArgs.ToConfiguration())
+                        .Build();
+                    return this.workflows.Single().Value
+                        .RunAsync(configuration);
+                }
+                catch (ArgumentException e)
+                {
+                    Console.Error.WriteLine($"Required argument is not provided: {e.Message}.");
+                    return Task.FromResult(1);
+                }
+                catch (OperationCanceledException)
+                {
+                    Console.Error.WriteLine("Aborted current operation.");
+                    return Task.FromResult(-1);
+                }
             });
 
             return rootCommand.InvokeAsync(this.arguments);
