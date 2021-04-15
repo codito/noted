@@ -4,10 +4,11 @@
 namespace Noted.Core.Extensions
 {
     using System.IO;
+    using System.Threading.Tasks;
     using Noted.Core.Models;
 
     public interface IDocumentWriter
     {
-        void Write(Document document, Stream output);
+        Task Write(Configuration configuration, Document document, Stream output);
     }
 }

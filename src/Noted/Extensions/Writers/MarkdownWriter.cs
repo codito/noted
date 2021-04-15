@@ -5,23 +5,25 @@ namespace Noted.Extensions.Writers
 {
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
+    using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
 
     public class MarkdownWriter : IDocumentWriter
     {
-        public void Write(Document document, Stream output)
+        public async Task Write(Configuration configuration, Document document, Stream output)
         {
             var writer = new StreamWriter(output, Encoding.UTF8)
                 { AutoFlush = true };
 
-            writer.WriteLine("---");
-            writer.WriteLine($"title: {document.Title}");
-            writer.WriteLine($"author: {document.Author}");
-            writer.WriteLine($"start date: {document.CreatedDate}");
-            writer.WriteLine($"end date: {document.ModifiedDate}");
-            writer.WriteLine("---");
-            writer.WriteLine();
+            await writer.WriteLineAsync("---");
+            await writer.WriteLineAsync($"title: {document.Title}");
+            await writer.WriteLineAsync($"author: {document.Author}");
+            await writer.WriteLineAsync($"start date: {document.CreatedDate}");
+            await writer.WriteLineAsync($"end date: {document.ModifiedDate}");
+            await writer.WriteLineAsync("---");
+            await writer.WriteLineAsync();
 
             var currentPage = 0;
             using var sectionIterator = document.Sections.GetEnumerator();
@@ -34,8 +36,8 @@ namespace Noted.Extensions.Writers
                        sectionIterator.Current.Location <= annotation.Context.Location)
                 {
                     var heading = sectionIterator.Current;
-                    writer.WriteLine($"{new string('#', heading.Level)} {heading.Title}");
-                    writer.WriteLine();
+                    await writer.WriteLineAsync($"{new string('#', heading.Level)} {heading.Title}");
+                    await writer.WriteLineAsync();
                     sectionIterator.MoveNext();
                 }
 
@@ -43,22 +45,23 @@ namespace Noted.Extensions.Writers
                 if (currentPage < annotation.Context.PageNumber)
                 {
                     currentPage = annotation.Context.PageNumber;
-                    writer.WriteLine($"**Page {currentPage}**");
-                    writer.WriteLine();
+                    await writer.WriteLineAsync($"**Page {currentPage}**");
+                    await writer.WriteLineAsync();
                 }
 
                 var prefix =
                     annotation.Type.Equals(AnnotationType.Highlight)
                         ? ">"
                         : "Note:";
-                writer.WriteLine($"{prefix} {annotation.Content}");
+                await writer.WriteLineAsync($"{prefix} {annotation.Content}");
 
-                if (!string.IsNullOrEmpty(annotation.Context.Content))
+                if (configuration.ExtractionContextLength > 0 && !string.IsNullOrEmpty(annotation.Context.Content))
                 {
-                    writer.WriteLine($"Context: {annotation.Context.Content}");
+                    await writer.WriteLineAsync();
+                    await writer.WriteLineAsync($"Context: {annotation.Context.Content}");
                 }
 
-                writer.WriteLine();
+                await writer.WriteLineAsync();
             }
         }
     }

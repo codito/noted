@@ -85,10 +85,13 @@ namespace Noted.Core
                             return annotations.ToList();
                         }
 
-                        return new List<Annotation>();
+                        var key = externalAnnotations.Keys
+                            .FirstOrDefault(k => k.IsSimilar(docRef));
+
+                        return key == null ? new List<Annotation>() : externalAnnotations[key].ToList();
                     });
 
-                this.WriteDocument(document, configuration);
+                await this.WriteDocument(document, configuration);
             }
 
             return 0;
@@ -105,7 +108,7 @@ namespace Noted.Core
             return new[] { sourcePath };
         }
 
-        private void WriteDocument(
+        private async Task WriteDocument(
             Document document,
             Configuration configuration)
         {
@@ -116,8 +119,8 @@ namespace Noted.Core
                 outputPath = Path.Combine(configuration.OutputPath, $"{document.Title}.md");
             }
 
-            using var stream = this.fileSystem.OpenPathForWrite(outputPath);
-            writer.Write(document, stream);
+            await using var stream = this.fileSystem.OpenPathForWrite(outputPath);
+            await writer.Write(configuration, document, stream);
             Console.WriteLine($"Completed: {document.Title}");
         }
     }

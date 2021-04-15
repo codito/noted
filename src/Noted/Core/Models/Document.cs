@@ -6,8 +6,14 @@ namespace Noted.Core.Models
     using System;
     using System.Collections.Generic;
 
-    public record Document : DocumentReference
+    public class Document : DocumentReference
     {
+        public Document()
+        {
+            this.Annotations = new List<Annotation>();
+            this.Sections = new List<DocumentSection>();
+        }
+
         public string Subject { get; set; }
 
         public string Keywords { get; set; }
