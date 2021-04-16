@@ -8,6 +8,7 @@ namespace Noted.Extensions.Readers
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
@@ -22,6 +23,9 @@ namespace Noted.Extensions.Readers
 
     public class PdfReader : IDocumentReader
     {
+        private static readonly Regex HyphenWordBreak =
+            new("\\w\\-$", RegexOptions.Compiled);
+
         public List<string> SupportedExtensions => new() { "pdf" };
 
         public Task<Document> Read(
@@ -50,7 +54,10 @@ namespace Noted.Extensions.Readers
             var annotations = new List<Annotation>();
             foreach (var page in doc.GetPages())
             {
-                var words = page.GetWords(NearestNeighbourWordExtractor.Instance).ToList();
+                var letters = page.Letters;
+                var words = NearestNeighbourWordExtractor.Instance
+                    .GetWords(letters, GetWordExtractOptions())
+                    .ToList();
                 foreach (var annotation in page.ExperimentalAccess.GetAnnotations().Where(a => a.Type.Equals(AnnotationType.Highlight)))
                 {
                     // Find highlighted words
@@ -61,8 +68,10 @@ namespace Noted.Extensions.Readers
                         var points = quad.Points;
                         var rect = new PdfRectangle(points[3], points[2], points[0], points[1]);
 
-                        var textInRegion = GetTextInRegion(words, rect);
-                        highlightedWords.AppendFormat("{0} ", textInRegion);
+                        var textInRegion = GetTextInRegion(words, rect, false);
+
+                        // Combine words split due to region
+                        highlightedWords.Append(TrimSplitWord(textInRegion));
                     }
 
                     annotations.Add(new Annotation
@@ -89,11 +98,35 @@ namespace Noted.Extensions.Readers
             });
         }
 
-        private static string GetTextInRegion(IEnumerable<Word> words, PdfRectangle rect)
+        private static string GetTextInRegion(
+            IEnumerable<Word> words,
+            PdfRectangle rect,
+            bool trimHyphenatedWords = true)
         {
             // Naive method below removes any formatting in the pdf
-            var wordsInRegion = words.Where(w => rect.Contains(w.BoundingBox.Centroid)).Select(w => w.Text);
-            return string.Join(" ", wordsInRegion.Where(w => !string.IsNullOrEmpty(w) && !string.IsNullOrWhiteSpace(w)));
+            var wordsInRegion = words
+                .Where(w => rect.Contains(w.BoundingBox.Centroid))
+                .Select(w => w.Text);
+            var buffer = new StringBuilder();
+
+            foreach (var word in wordsInRegion)
+            {
+                if (string.IsNullOrEmpty(word) || word == " ")
+                {
+                    continue;
+                }
+
+                // Combine words split due to region
+                if (trimHyphenatedWords)
+                {
+                    buffer.Append(TrimSplitWord(word));
+                    continue;
+                }
+
+                buffer.AppendFormat("{0} ", word);
+            }
+
+            return buffer.ToString().TrimEnd();
         }
 
         private static string GetTextWithContextInRegion(
@@ -118,6 +151,45 @@ namespace Noted.Extensions.Readers
             }
 
             return GetTextInRegion(words, blocksAroundRegion.Single().BoundingBox);
+        }
+
+        private static NearestNeighbourWordExtractor.NearestNeighbourWordExtractorOptions GetWordExtractOptions()
+        {
+            // See https://github.com/UglyToad/PdfPig/blob/master/src/UglyToad.PdfPig.DocumentLayoutAnalysis/WordExtractor/NearestNeighbourWordExtractor.cs#L138
+            // for the original implementation. We're using a lower max distance between
+            // words.
+            return
+                new()
+                {
+                    MaximumDistance = (l1, l2) =>
+                    {
+                        var maxDist = Math.Max(
+                            Math.Max(
+                                Math.Max(
+                                    Math.Max(
+                                        Math.Max(
+                                            Math.Abs(l1.GlyphRectangle.Width),
+                                            Math.Abs(l2.GlyphRectangle.Width)),
+                                        Math.Abs(l1.Width)),
+                                    Math.Abs(l2.Width)),
+                                l1.PointSize),
+                            l2.PointSize) * 0.1;
+
+                        if (l1.TextOrientation ==
+                            TextOrientation.Other ||
+                            l2.TextOrientation == TextOrientation.Other)
+                        {
+                            return 2.0 * maxDist;
+                        }
+
+                        return maxDist;
+                    }
+                };
+        }
+
+        private static string TrimSplitWord(string word)
+        {
+            return HyphenWordBreak.IsMatch(word) ? word.TrimEnd('-') : $"{word} ";
         }
     }
 }
