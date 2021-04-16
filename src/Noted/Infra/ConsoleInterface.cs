@@ -11,8 +11,6 @@ namespace Noted.Infra
     using System.Linq;
     using System.Threading.Tasks;
     using Noted.Core;
-    using Noted.Core.Platform.IO;
-    using Noted.Platform.IO;
 
     /// <summary>
     /// Entrypoint for the Console User Interface.
@@ -73,27 +71,31 @@ namespace Noted.Infra
 
             // rootCommand.Name = "extract";
             rootCommand.Description = "Extracts highlights and notes from documents and save them as markdown";
-            rootCommand.Handler = CommandHandler.Create<CommandLineArguments>(cliArgs =>
-            {
-                try
-                {
-                    var configuration = this.configurationProvider
-                        .WithConfiguration(cliArgs.ToConfiguration())
-                        .Build();
-                    return this.workflows.Single().Value
-                        .RunAsync(configuration);
-                }
-                catch (ArgumentException e)
-                {
-                    Console.Error.WriteLine($"Required argument is not provided: {e.Message}.");
-                    return Task.FromResult(1);
-                }
-                catch (OperationCanceledException)
-                {
-                    Console.Error.WriteLine("Aborted current operation.");
-                    return Task.FromResult(-1);
-                }
-            });
+            rootCommand.Handler = CommandHandler.Create<CommandLineArguments>(
+             async cliArgs =>
+             {
+                 try
+                 {
+                     var configuration = this.configurationProvider
+                         .WithConfiguration(cliArgs.ToConfiguration())
+                         .Build();
+                     var extractWorkflow = this.workflows.Single().Value;
+
+                     using var consolePresenter = new ConsolePresenter((ExtractWorkflowEvents)extractWorkflow);
+                     await extractWorkflow.RunAsync(configuration);
+                     return 0;
+                 }
+                 catch (ArgumentException e)
+                 {
+                     Console.Error.WriteLine($"Required argument is not provided: {e.Message}.");
+                     return 1;
+                 }
+                 catch (OperationCanceledException)
+                 {
+                     Console.Error.WriteLine("Aborted current operation.");
+                     return -1;
+                 }
+             });
 
             return rootCommand.InvokeAsync(this.arguments);
         }

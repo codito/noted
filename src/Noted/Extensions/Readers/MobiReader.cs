@@ -32,7 +32,6 @@ namespace Noted.Extensions.Readers
                 Author = mobi.Author
             };
 
-            Console.WriteLine($"Book: {docRef.Title}");
             var externalAnnotations = fetchExternalAnnotations(docRef)
                 .Select(a => (
                     Location: LineLocation.FromString(a.Context.SerializedLocation),

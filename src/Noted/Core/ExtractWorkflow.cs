@@ -16,7 +16,7 @@ namespace Noted.Core
     /// Workflow to extract annotations from files or directory (batch mode) and
     /// write them as markdown documents.
     /// </summary>
-    public class ExtractWorkflow : IWorkflow
+    public class ExtractWorkflow : ExtractWorkflowEvents, IWorkflow
     {
         private readonly IFileSystem fileSystem;
 
@@ -46,6 +46,8 @@ namespace Noted.Core
         //  5. Export annotations to output
         public async Task<int> RunAsync(Configuration configuration)
         {
+            this.Raise(new WorkflowStartEventArgs());
+
             // Extract external annotations for the library
             var externalAnnotations = configuration
                 .AnnotationProviders
@@ -71,6 +73,7 @@ namespace Noted.Core
                 }
 
                 // TODO extract file scoped external annotations (KOReader)
+                this.Raise(new ExtractionStartedEventArgs { FileName = file });
                 await using var stream = this.fileSystem.OpenPathForRead(file);
                 var document = await reader.Read(
                     stream,
@@ -90,8 +93,10 @@ namespace Noted.Core
 
                 document.Source = file;
                 await this.WriteDocument(document, configuration);
+                this.Raise(new ExtractionCompletedEventArgs { Document = document });
             }
 
+            this.Raise(new WorkflowCompleteEventArgs());
             return 0;
         }
 
@@ -122,7 +127,6 @@ namespace Noted.Core
 
             await using var stream = this.fileSystem.OpenPathForWrite(outputPath);
             await writer.Write(configuration, document, stream);
-            Console.WriteLine($"Completed: {document.Title}");
         }
     }
 }
