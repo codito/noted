@@ -32,7 +32,7 @@ namespace Noted.Core.Models
             return new LineLocation(int.Parse(range[0]), int.Parse(range[1]));
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             if (!(obj is LineLocation other))
             {

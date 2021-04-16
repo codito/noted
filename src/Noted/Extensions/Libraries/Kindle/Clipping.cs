@@ -4,16 +4,15 @@
 namespace Noted.Extensions.Libraries.Kindle
 {
     using System;
-    using Noted.Core;
     using Noted.Core.Models;
 
     public class Clipping
     {
         public Clipping() => this.PageNumber = -1;
 
-        public string Book { get; set; }
+        public string Book { get; set; } = null!;
 
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         public ClippingType Type { get; set; }
 
@@ -23,6 +22,6 @@ namespace Noted.Extensions.Libraries.Kindle
 
         public DateTime CreationDate { get; set; }
 
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
     }
 }

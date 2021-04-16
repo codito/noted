@@ -3,6 +3,7 @@
 
 namespace Noted.Tests.Extensions.Readers.Common
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,8 +23,8 @@ namespace Noted.Tests.Extensions.Readers.Common
 
         private static readonly List<DocumentSection> SampleSections = new()
         {
-            new() { Title = "Ch1", Level = 1, Location = 0 },
-            new() { Title = "Ch2", Level = 1, Location = 141 }
+            new("Ch1", 1,  0),
+            new("Ch2", 1, 141)
         };
 
         private readonly List<Annotation> annotations;
@@ -34,8 +35,8 @@ namespace Noted.Tests.Extensions.Readers.Common
             this.parser = new HtmlContextParser();
             this.annotations = new List<Annotation>
             {
-                new() { Content = "call yourself a philosopher", Context = new AnnotationContext() },
-                new() { Content = "eat as you ought. And, if anyone", Context = new AnnotationContext() }
+                CreateAnnotation("call yourself a philosopher"),
+                CreateAnnotation("eat as you ought. And, if anyone")
             };
         }
 
@@ -63,6 +64,16 @@ namespace Noted.Tests.Extensions.Readers.Common
             Assert.AreEqual(1, a.Count);
             Assert.IsTrue(a[0].Context.Content.StartsWith("Thus, "));
             Assert.AreEqual("Ch2", a[0].Context.DocumentSection.Title);
+        }
+
+        private static Annotation CreateAnnotation(string content)
+        {
+            return new(
+                content,
+                new DocumentReference(),
+                AnnotationType.Highlight,
+                new AnnotationContext(),
+                DateTime.MinValue);
         }
     }
 }

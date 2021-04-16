@@ -25,7 +25,7 @@ namespace Noted.Extensions.Readers
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
         {
             var mobi = new MobiMetadata(stream);
-            var text = new StreamReader(mobi.GetRawMlStream()).ReadToEnd();
+            var text = await new StreamReader(mobi.GetRawMlStream()).ReadToEndAsync();
             var docRef = new DocumentReference
             {
                 Title = mobi.Title,

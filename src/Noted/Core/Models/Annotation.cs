@@ -10,16 +10,10 @@ namespace Noted.Core.Models
     /// text within a document.
     /// </summary>
     /// TODO support context with tree of headings e.g. path from root to child
-    public record Annotation
-    {
-        public string Content { get; init; }
-
-        public AnnotationContext Context { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public DocumentReference Document { get; init; }
-
-        public AnnotationType Type { get; init; }
-    }
+    public record Annotation(
+        string Content,
+        DocumentReference Document,
+        AnnotationType Type,
+        AnnotationContext Context,
+        DateTime CreatedDate);
 }

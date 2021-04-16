@@ -14,15 +14,15 @@ namespace Noted.Core.Models
             this.Sections = new List<DocumentSection>();
         }
 
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
-        public string Keywords { get; set; }
+        public string? Keywords { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
 
-        public string Source { get; set; }
+        public string? Source { get; set; }
 
         /// <summary>
         /// Gets or sets a sorted list of annotations in the Document.

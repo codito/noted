@@ -9,11 +9,11 @@ namespace Noted.Core.Models
 
     public class DocumentReference
     {
-        private SortedSet<string> authorVector;
+        private SortedSet<string>? authorVector;
 
-        public string Title { get; init; }
+        public string Title { get; init; } = null!;
 
-        public string Author { get; init; }
+        public string Author { get; init; } = null!;
 
         private SortedSet<string> AuthorVector
         {
@@ -31,7 +31,7 @@ namespace Noted.Core.Models
             }
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             if (!(other is DocumentReference right))
             {

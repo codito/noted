@@ -11,15 +11,17 @@ namespace Noted.Infra
     using System.Linq;
     using System.Threading.Tasks;
     using Noted.Core;
+    using Noted.Core.Platform.IO;
+    using Noted.Platform.IO;
 
     /// <summary>
     /// Entrypoint for the Console User Interface.
     /// </summary>
     public class ConsoleInterface
     {
-        private string[] arguments;
-        private ConfigurationProvider configurationProvider;
-        private IDictionary<string, IWorkflow> workflows;
+        private string[] arguments = null!;
+        private ConfigurationProvider configurationProvider = null!;
+        private IDictionary<string, IWorkflow> workflows = null!;
 
         public ConsoleInterface WithArguments(string[] args)
         {
@@ -51,6 +53,11 @@ namespace Noted.Infra
                 () => true,
                 "extract table of contents and align annotations");
             tocOption.AddAlias("-t");
+            var verboseOption = new Option<bool>(
+                "--verbose",
+                () => false,
+                "enable verbose logging");
+            verboseOption.AddAlias("-v");
 
             var rootCommand = new RootCommand
             {
@@ -97,9 +104,11 @@ namespace Noted.Infra
 
             public bool ExtractDocumentSections { get; set; }
 
-            public string SourcePath { get; set; }
+            public string SourcePath { get; set; } = null!;
 
-            public string OutputPath { get; set; }
+            public string OutputPath { get; set; } = null!;
+
+            public bool Verbose { get; set; }
 
             public Configuration ToConfiguration()
             {
@@ -121,6 +130,7 @@ namespace Noted.Infra
                 {
                     ExtractionContextLength = this.Context,
                     ExtractDocumentSections = this.ExtractDocumentSections,
+                    Verbose = this.Verbose,
                     SourcePath = this.SourcePath,
                     OutputPath = this.OutputPath,
                     TreatSourceAsLibrary = sourceAsLibrary

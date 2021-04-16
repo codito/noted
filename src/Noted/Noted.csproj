@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <SourceRoot Condition="$(SourceRoot) == ''">..\..\</SourceRoot>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="$(SourceRoot)scripts/settings.targets" />
 

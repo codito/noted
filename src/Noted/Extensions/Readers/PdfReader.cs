@@ -74,15 +74,20 @@ namespace Noted.Extensions.Readers
                         highlightedWords.Append(TrimSplitWord(textInRegion));
                     }
 
-                    annotations.Add(new Annotation
-                    {
-                        Content = highlightedWords.ToString(),
-                        Context = new AnnotationContext
+                    DateTime.TryParse(
+                        annotation.ModifiedDate,
+                        out var createdDate);
+                    annotations.Add(new Annotation(
+                        highlightedWords.ToString(),
+                        docReference,
+                        Core.Models.AnnotationType.Highlight,
+                        new AnnotationContext
                         {
-                            Content = GetTextWithContextInRegion(words, annotation.Rectangle)
+                            Content = GetTextWithContextInRegion(
+                                words,
+                                annotation.Rectangle)
                         },
-                        Type = Core.Models.AnnotationType.Highlight
-                    });
+                        createdDate));
                 }
             }
 
@@ -157,7 +162,7 @@ namespace Noted.Extensions.Readers
         {
             // See https://github.com/UglyToad/PdfPig/blob/master/src/UglyToad.PdfPig.DocumentLayoutAnalysis/WordExtractor/NearestNeighbourWordExtractor.cs#L138
             // for the original implementation. We're using a lower max distance between
-            // words.
+            // words (0.1 instead of 0.2) to ensure letters are grouped more accurately.
             return
                 new()
                 {

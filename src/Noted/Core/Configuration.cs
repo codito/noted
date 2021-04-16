@@ -5,6 +5,7 @@ namespace Noted.Core
 {
     using System.Collections.Generic;
     using Noted.Core.Extensions;
+    using Noted.Core.Platform.IO;
 
     /// <summary>
     /// Configuration for the app.
@@ -15,22 +16,24 @@ namespace Noted.Core
 
         public bool ExtractDocumentSections { get; init; } = true;
 
-        public string SourcePath { get; init; }
+        public bool Verbose { get; init; } = false;
 
-        public string OutputPath { get; init; }
+        public string SourcePath { get; init; } = null!;
+
+        public string OutputPath { get; init; } = null!;
 
         public bool TreatSourceAsLibrary { get; init; }
 
 #region Dependencies
-        public List<IAnnotationProvider> AnnotationProviders
-        {
-            get;
-            init;
-        }
 
-        public List<IDocumentReader> Readers { get; init; }
+        public List<IAnnotationProvider> AnnotationProviders { get; init; } = null!;
 
-        public List<IDocumentWriter> Writers { get; init; }
+        public ILogger Logger { get; init; } = null!;
+
+        public List<IDocumentReader> Readers { get; init; } = null!;
+
+        public List<IDocumentWriter> Writers { get; init; } = null!;
+
 #endregion
     }
 }

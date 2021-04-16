@@ -3,6 +3,7 @@
 
 namespace Noted.Tests.Extensions.Readers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -29,16 +30,16 @@ namespace Noted.Tests.Extensions.Readers
             var reader = new MobiReader();
             var annotations = new List<Annotation>
             {
-                new()
-                {
-                    Content =
-                        "Nothing is so painful to the human mind as a great and sudden change.",
-                    Context = new AnnotationContext
+                new(
+                    "Nothing is so painful to the human mind as a great and sudden change.",
+                    new DocumentReference(),
+                    AnnotationType.Highlight,
+                    new AnnotationContext
                     {
                         PageNumber = 380,
                         SerializedLocation = "line://925-994"
-                    }
-                }
+                    },
+                    DateTime.MinValue)
             };
 
             var document = await reader.Read(

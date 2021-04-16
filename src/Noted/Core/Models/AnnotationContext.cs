@@ -8,12 +8,12 @@ namespace Noted.Core.Models
         /// <summary>
         /// Gets or sets content block surrounding the annotation.
         /// </summary>
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         /// <summary>
         /// Gets or sets document section for this annotation.
         /// </summary>
-        public DocumentSection DocumentSection { get; set; }
+        public DocumentSection? DocumentSection { get; set; }
 
         /// <summary>
         /// Gets or sets the annotation location relative to beginning of Document.
@@ -21,13 +21,13 @@ namespace Noted.Core.Models
         public int Location { get; set; }
 
         /// <summary>
-        /// Gets or sets serialized location of the annotation.
+        /// Gets serialized location of the annotation.
         /// </summary>
-        public string SerializedLocation { get; set; }
+        public string SerializedLocation { get; init; } = null!;
 
         /// <summary>
-        /// Gets or sets page containing the annotation.
+        /// Gets page containing the annotation.
         /// </summary>
-        public int PageNumber { get; set; }
+        public int PageNumber { get; init; }
     }
 }

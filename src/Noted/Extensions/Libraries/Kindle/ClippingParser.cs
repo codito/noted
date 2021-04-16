@@ -7,6 +7,7 @@ namespace Noted.Extensions.Libraries.Kindle
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using Noted.Core.Models;
@@ -37,7 +38,7 @@ namespace Noted.Extensions.Libraries.Kindle
             //  <content>
             //  ==========
             var reader = new StreamReader(stream, Encoding.UTF8);
-            string line;
+            string? line;
             while ((line = reader.ReadLine()) != null)
             {
                 // We have an annotation block. Start processing!
@@ -66,7 +67,7 @@ namespace Noted.Extensions.Libraries.Kindle
 
         public static Clipping ParseAnnotationInfo(
             this Clipping clipping,
-            string line)
+            string? line)
         {
             if (string.IsNullOrEmpty(line) || !line.StartsWith("- "))
             {
@@ -113,7 +114,7 @@ namespace Noted.Extensions.Libraries.Kindle
             return clipping;
         }
 
-        public static Clipping SkipBlankLine(this Clipping clipping, string line)
+        public static Clipping SkipBlankLine(this Clipping clipping, string? line)
         {
             if (line != null && line.Length == 0)
             {
@@ -123,12 +124,12 @@ namespace Noted.Extensions.Libraries.Kindle
             throw new InvalidClippingException("Expected blank line", line);
         }
 
-        public static Clipping ParseContent(this Clipping clipping, IEnumerable<string> lines)
+        public static Clipping ParseContent(this Clipping clipping, IEnumerable<string?> lines)
         {
             var text = new StringBuilder();
-            foreach (var line in lines)
+            foreach (var line in lines.Where(l => l != null))
             {
-                if (line.Equals(AnnotationEndMarker, StringComparison.InvariantCulture))
+                if (line!.Equals(AnnotationEndMarker, StringComparison.InvariantCulture))
                 {
                     break;
                 }

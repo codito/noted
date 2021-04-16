@@ -46,12 +46,10 @@ namespace Noted.Extensions.Readers.Common
                     levelSet[depth] = level;
                 }
 
-                yield return new DocumentSection
-                {
-                    Title = node.Text(),
-                    Level = level,
-                    Location = string.IsNullOrEmpty(fileOffset) ? 0 : int.Parse(fileOffset)
-                };
+                yield return new DocumentSection(
+                    node.Text(),
+                    level,
+                    string.IsNullOrEmpty(fileOffset) ? 0 : int.Parse(fileOffset));
             }
         }
     }

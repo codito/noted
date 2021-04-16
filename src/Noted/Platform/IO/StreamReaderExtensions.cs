@@ -8,7 +8,7 @@ namespace Noted.Platform.IO
 
     public static class StreamReaderExtensions
     {
-        public static IEnumerable<string> AsEnumerable(this StreamReader reader)
+        public static IEnumerable<string?> AsEnumerable(this StreamReader reader)
         {
             while (!reader.EndOfStream)
             {

@@ -10,22 +10,19 @@ namespace Noted.Extensions.Libraries.Kindle
     {
         public static Annotation ToAnnotation(this Clipping clipping)
         {
-            return new()
-            {
-                Content = clipping.Content,
-                Context = new AnnotationContext
-                {
-                    SerializedLocation = LineLocation.ToString(clipping.Location),
-                    PageNumber = clipping.PageNumber
-                },
-                CreatedDate = clipping.CreationDate,
-                Document = new DocumentReference
+            return new(clipping.Content,
+                new DocumentReference
                 {
                     Title = clipping.Book,
                     Author = clipping.Author
                 },
-                Type = MapAnnotationType(clipping.Type)
-            };
+                MapAnnotationType(clipping.Type),
+                new AnnotationContext
+                {
+                    SerializedLocation = LineLocation.ToString(clipping.Location),
+                    PageNumber = clipping.PageNumber
+                },
+                clipping.CreationDate);
         }
 
         private static AnnotationType MapAnnotationType(ClippingType type)

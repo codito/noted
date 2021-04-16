@@ -33,7 +33,7 @@ namespace Noted.Tests.Extensions.Readers
         {
             this.reader = new PdfReader();
             this.emptyExternalAnnotations =
-                docRef => new List<Annotation>();
+                _ => new List<Annotation>();
         }
 
         [TestMethod]
