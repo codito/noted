@@ -137,7 +137,7 @@ namespace Noted.Core
             {
                 var docName = string.IsNullOrEmpty(document.Source)
                     ? document.Title
-                    : Path.GetFileName(document.Source);
+                    : Path.GetFileNameWithoutExtension(document.Source);
                 outputPath = Path.Combine(configuration.OutputPath, $"{docName}.md");
             }
 

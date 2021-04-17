@@ -39,14 +39,18 @@ namespace Noted.Extensions.Writers
             foreach (var annotation in document.Annotations)
             {
                 // Print section header
-                // TODO option for including empty headers
-                while (sectionIterator.Current != null &&
-                       sectionIterator.Current.Location <= annotation.Context.Location)
+                if (configuration.ExtractDocumentSections)
                 {
-                    var heading = sectionIterator.Current;
-                    await writer.WriteLineAsync($"{new string('#', heading.Level)} {heading.Title}");
-                    await writer.WriteLineAsync();
-                    sectionIterator.MoveNext();
+                    while (sectionIterator.Current != null &&
+                           sectionIterator.Current.Location <=
+                           annotation.Context.Location)
+                    {
+                        var (title, level, _) = sectionIterator.Current;
+                        await writer.WriteLineAsync(
+                            $"{new string('#', level)} {title}");
+                        await writer.WriteLineAsync();
+                        sectionIterator.MoveNext();
+                    }
                 }
 
                 // Print page number

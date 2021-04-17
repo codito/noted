@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Use Crayon or Pastel for console output -->
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="AngleSharp.XPath" Version="1.1.7" />
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.3" />
@@ -23,6 +22,11 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
     <PackageReference Include="System.Linq.Async" Version="5.0.0" />
     <PackageReference Include="VersOne.Epub" Version="3.0.3.1" />
+
+    <!-- Workaround for publish because of JTForks.MiscUtil -->
+    <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

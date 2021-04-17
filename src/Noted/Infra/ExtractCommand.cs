@@ -15,12 +15,12 @@ namespace Noted.Infra
     {
         public static RootCommand Create(ConfigurationProvider configurationProvider, Func<Configuration, IWorkflow> createWorkflow)
         {
-            var contextOption = new Option<byte>(
+            var contextOption = new Option<bool>(
                 new[] { "-c", "--context" },
-                () => 0,
-                "extract <context> lines of text before and after the annotation");
+                () => false,
+                "extract the paragraph containing an annotation");
             var tocOption = new Option<bool>(
-                new[] { "-t", "--toc" },
+                new[] { "-t", "--no-toc" },
                 () => true,
                 "extract table of contents and align annotations");
             var verboseOption = new Option<bool>(
@@ -78,7 +78,7 @@ namespace Noted.Infra
                 var configuration = configurationProvider
                     .WithConfiguration(new Configuration
                     {
-                        ExtractionContextLength = args.Context,
+                        ExtractionContextLength = args.Context ? 1 : 0,
                         ExtractDocumentSections = args.ExtractDocumentSections,
                         Verbose = args.Verbose,
                         SourcePath = args.SourcePath,
@@ -99,7 +99,7 @@ namespace Noted.Infra
 
         private class ExtractCommandArguments
         {
-            public byte Context { get; set; }
+            public bool Context { get; set; }
 
             public bool ExtractDocumentSections { get; set; }
 
