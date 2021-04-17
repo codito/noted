@@ -28,7 +28,7 @@ namespace Noted.Platform.IO
 
         public Stream OpenPathForWrite(string filePath)
         {
-            return File.OpenWrite(filePath);
+            return File.Open(filePath, FileMode.Create);
         }
 
         public IEnumerable<string> GetFiles(string path, string searchPattern)

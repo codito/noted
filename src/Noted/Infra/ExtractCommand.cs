@@ -20,7 +20,7 @@ namespace Noted.Infra
                 () => false,
                 "extract the paragraph containing an annotation");
             var tocOption = new Option<bool>(
-                new[] { "-t", "--no-toc" },
+                new[] { "-t", "--toc" },
                 () => true,
                 "extract table of contents and align annotations");
             var verboseOption = new Option<bool>(
@@ -79,7 +79,7 @@ namespace Noted.Infra
                     .WithConfiguration(new Configuration
                     {
                         ExtractionContextLength = args.Context ? 1 : 0,
-                        ExtractDocumentSections = args.ExtractDocumentSections,
+                        ExtractDocumentSections = args.Toc,
                         Verbose = args.Verbose,
                         SourcePath = args.SourcePath,
                         OutputPath = args.OutputPath,
@@ -99,15 +99,17 @@ namespace Noted.Infra
 
         private class ExtractCommandArguments
         {
+            // NOTE: the name of options must be same as the long aliases
+            // for automatic model binding to work
             public bool Context { get; set; }
 
-            public bool ExtractDocumentSections { get; set; }
+            public bool Toc { get; set; }
+
+            public bool Verbose { get; set; }
 
             public string SourcePath { get; set; } = null!;
 
             public string OutputPath { get; set; } = null!;
-
-            public bool Verbose { get; set; }
         }
     }
 }
