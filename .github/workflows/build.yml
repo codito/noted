@@ -49,9 +49,9 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Extract version
-          id: extract_version
-          run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-          shell: bash
+        id: extract_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        shell: bash
       - name: Build
         run: |
           cd ./src/Noted
