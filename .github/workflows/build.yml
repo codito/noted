@@ -1,9 +1,11 @@
-name: Build (CI)
+# Based on https://gist.github.com/nogic1008/0be6a52a74b28b9909549f4d48a1cbd9
+# and https://github.com/Tyrrrz/DiscordChatExporter/tree/master/.github/workflows
+name: Build
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -15,22 +17,89 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.3
-
       - name: Install .NET (v5.0)
         uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: 5.0.x
-
       - name: Test
         run: |
           dotnet test --configuration Debug
           dotnet test --configuration Release
-
       - name: Publish
         run: dotnet publish src/Noted -o src/Noted/bin/Publish/ --configuration Release
-
       - name: Upload build artifacts (CLI)
         uses: actions/upload-artifact@v1
         with:
           name: Noted
           path: src/Noted/bin/Publish/
+
+  release:
+    name: Create Github Release
+    if: contains(github.ref, 'tags/v') # works only version tagged
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+              [Changelog](https://github.com/codito/Noted/blob/master/CHANGELOG.md)
+          draft: false
+          prerelease: false
+      - name: Output Release URL File
+        run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
+      - name: Save Release URL File for publish
+        uses: actions/upload-artifact@v1
+        with:
+          name: release_url
+          path: release_url.txt
+        
+  publish:
+    if: contains(github.ref, 'tags/v') # only publish tagged versions
+    needs: [test, release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [win-x64, linux-x64]
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      NUGET_XMLDOC_MODE: skip
+    steps:
+      - uses: actions/checkout@v1
+      - name: Load Release URL File from release job
+        uses: actions/download-artifact@v1
+        with:
+          name: release_url
+      - name: Install .NET (v5.0)
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.0.x
+      - name: Build
+        run: |
+          dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }}
+          zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
+      - name: Get Release File Name & Upload URL
+        id: get_release_info
+        run: |
+          echo ::set-output name=file_name::${REPOSITORY_NAME##*/}-${TAG_REF_NAME##*/v} #ex. RepositoryName-1.0.0
+          value=`cat release_url.txt`
+          echo ::set-output name=upload_url::$value
+        env:
+          TAG_REF_NAME: ${{ github.ref }}
+          REPOSITORY_NAME: ${{ github.repository }}
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./${{ matrix.rid }}.zip
+          asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.rid }}.zip
+          asset_content_type: application/zip
