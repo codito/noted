@@ -1,0 +1,33 @@
+name: Build (CI)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.3
+
+      - name: Install .NET (v5.0)
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Test
+        run: |
+          dotnet test --configuration Debug
+          dotnet test --configuration Release
+
+      - name: Publish
+        run: dotnet publish src/Noted -o src/Noted/bin/Publish/ --configuration Release
+
+      - name: Upload build artifacts (CLI)
+        uses: actions/upload-artifact@v1
+        with:
+          name: Noted
+          path: src/Noted/bin/Publish/
