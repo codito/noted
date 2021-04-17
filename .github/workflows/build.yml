@@ -54,7 +54,7 @@ jobs:
           dotnet publish src/Noted -c Release --self-contained false -r win-x64 -o ./src/Noted/bin/Portable.win-x64
           dotnet publish src/Noted -c Release --self-contained false -r linux-x64 -o ./src/Noted/bin/Portable.linux-x64
           dotnet publish src/Noted -c Release --self-contained -r win-x64 -o ./src/Noted/bin/win-x64
-          dotnet publish src/Noted -c Release --self-contained -r linux-64 -o ./src/Noted/bin/linux-x64
+          dotnet publish src/Noted -c Release --self-contained -r linux-x64 -o ./src/Noted/bin/linux-x64
           zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.Portable.win-x64 ./src/Noted/bin/Portable.win-x64
           zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.Portable.linux-x64 ./src/Noted/bin/Portable.linux-x64
           zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.win-x64 ./src/Noted/bin/win-x64
