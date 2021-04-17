@@ -17,13 +17,13 @@ produce a plain text markdown file.
 ## Installation
 
 If you've .NET Core 5.0 or above already installed, simply download the
-`Noted.Portable.zip` file from the [latest release][release].
+`Noted.<version>.Portable.<os>.zip` file from the [latest release][release].
 
-If you do not wish to install .NET Core 5.0, try the platform specific files
-from [latest release][release].
+If you do not wish to install .NET Core 5.0, try the self contained app from
+[latest release][release].
 
-- Windows: `Noted-<version>.win-x64.zip`
-- Linux: `Noted-<version>.linux-x64.zip`
+- Windows: `Noted.<version>.win-x64.zip`
+- Linux: `Noted.<version>.linux-x64.zip`
 
 [release]: https://github.com/codito/noted/releases
 
@@ -42,7 +42,7 @@ Arguments:
 
 Options:
   -c, --context     extract the paragraph containing an annotation [default: False]
-  -t, --no-toc      extract table of contents and align annotations [default: True]
+  -t, --toc         extract table of contents and align annotations [default: True]
   -v, --verbose     enable verbose logging [default: False]
   --version         Show version information
   -?, -h, --help    Show help and usage information
