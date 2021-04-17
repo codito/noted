@@ -19,7 +19,7 @@ namespace Noted.Core
             this.Writers = new List<IDocumentWriter>();
         }
 
-        public byte ExtractionContextLength { get; init; }
+        public int ExtractionContextLength { get; init; }
 
         public bool ExtractDocumentSections { get; init; } = true;
 
