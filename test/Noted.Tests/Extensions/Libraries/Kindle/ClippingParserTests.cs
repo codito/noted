@@ -42,7 +42,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
 
 Forcing functions can be a nuisance in normal usage. The result is that many people will deliberately disable the forcing function, thereby negating its safety feature.
 ==========
-﻿The Design of Everyday Things: Revised and Expanded Edition (Norman, Don)
+ The Design of Everyday Things: Revised and Expanded Edition (Norman, Don)
 - Your Note on Location 3026-3027 | Added on Thursday, August 15, 2019 10:16:42 AM
 
 Affordances refer to the potential actions that are possible, but these are easily discoverable only if they are perceivable: perceived affordances. It is the signifier component of the perceived affordance that allows people to determine the possible actions.
@@ -163,7 +163,7 @@ Affordances refer to the potential actions that are possible, but these are easi
         {
             var clip = this.clipping.ParseContent(lines.Split('\n'));
 
-            Assert.AreEqual(content, clip.Content);
+            Assert.AreEqual(content.Replace("\n", Environment.NewLine), clip.Content);
         }
 
         public void Dispose()
