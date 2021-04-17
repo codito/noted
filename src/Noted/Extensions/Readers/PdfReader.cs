@@ -12,6 +12,7 @@ namespace Noted.Extensions.Readers
     using System.Threading.Tasks;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
     using UglyToad.PdfPig;
     using UglyToad.PdfPig.Content;
     using UglyToad.PdfPig.Core;
@@ -25,6 +26,13 @@ namespace Noted.Extensions.Readers
     {
         private static readonly Regex HyphenWordBreak =
             new("\\w\\-$", RegexOptions.Compiled);
+
+        private ILogger logger;
+
+        public PdfReader(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public List<string> SupportedExtensions => new() { "pdf" };
 

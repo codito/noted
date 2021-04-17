@@ -9,9 +9,17 @@ namespace Noted.Extensions.Writers
     using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
 
     public class MarkdownWriter : IDocumentWriter
     {
+        private readonly ILogger logger;
+
+        public MarkdownWriter(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public async Task Write(Configuration configuration, Document document, Stream output)
         {
             var writer = new StreamWriter(output, Encoding.UTF8)

@@ -46,7 +46,7 @@ The interpretation of a perceived affordance is a cultural convention.
                 .Returns(true);
             fileSystem.Setup(f => f.OpenPathForRead(It.IsAny<string>()))
                 .Returns(stream);
-            var kindle = new ClippingAnnotationProvider(fileSystem.Object);
+            var kindle = new ClippingAnnotationProvider(fileSystem.Object, new NullLogger());
             var clippings = kindle.GetAnnotations("dummyPath").ToList();
 
             Assert.AreEqual(3, clippings.Count);
@@ -67,7 +67,7 @@ The interpretation of a perceived affordance is a cultural convention.
                 .Returns(false);
             fileSystem.Setup(f => f.OpenPathForRead(It.IsAny<string>()))
                 .Returns(stream);
-            var kindle = new ClippingAnnotationProvider(fileSystem.Object);
+            var kindle = new ClippingAnnotationProvider(fileSystem.Object, new NullLogger());
             var clippings = kindle.GetAnnotations("dummyPath").ToList();
 
             Assert.AreEqual(0, clippings.Count);

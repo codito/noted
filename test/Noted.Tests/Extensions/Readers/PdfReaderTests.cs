@@ -11,6 +11,7 @@ namespace Noted.Tests.Extensions.Readers
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
     using Noted.Extensions.Readers;
     using UglyToad.PdfPig.Content;
     using UglyToad.PdfPig.Core;
@@ -31,7 +32,7 @@ namespace Noted.Tests.Extensions.Readers
 
         public PdfReaderTests()
         {
-            this.reader = new PdfReader();
+            this.reader = new PdfReader(new NullLogger());
             this.emptyExternalAnnotations =
                 _ => new List<Annotation>();
         }

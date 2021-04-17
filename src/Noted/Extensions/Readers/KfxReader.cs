@@ -12,9 +12,17 @@ namespace Noted.Extensions.Readers
     using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
 
     public class KfxReader : IDocumentReader
     {
+        private readonly ILogger logger;
+
+        public KfxReader(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public List<string> SupportedExtensions => new() { "kfx" };
 
         public Task<Document> Read(

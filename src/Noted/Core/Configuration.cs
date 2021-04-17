@@ -12,6 +12,13 @@ namespace Noted.Core
     /// </summary>
     public class Configuration
     {
+        public Configuration()
+        {
+            this.AnnotationProviders = new List<IAnnotationProvider>();
+            this.Readers = new List<IDocumentReader>();
+            this.Writers = new List<IDocumentWriter>();
+        }
+
         public byte ExtractionContextLength { get; init; }
 
         public bool ExtractDocumentSections { get; init; } = true;
@@ -26,13 +33,16 @@ namespace Noted.Core
 
 #region Dependencies
 
-        public List<IAnnotationProvider> AnnotationProviders { get; init; } = null!;
+        // TODO evaluate if these should be a separate concept e.g. Environment
+        public IFileSystem FileSystem { get; set; } = null!;
 
-        public ILogger Logger { get; init; } = null!;
+        public ILogger Logger { get; set; } = null!;
 
-        public List<IDocumentReader> Readers { get; init; } = null!;
+        public List<IAnnotationProvider> AnnotationProviders { get; set; }
 
-        public List<IDocumentWriter> Writers { get; init; } = null!;
+        public List<IDocumentReader> Readers { get; set; }
+
+        public List<IDocumentWriter> Writers { get; set; }
 
 #endregion
     }

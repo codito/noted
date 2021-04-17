@@ -3,7 +3,9 @@
 
 namespace Noted.Infra
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Platform.IO;
@@ -14,10 +16,18 @@ namespace Noted.Infra
     /// </summary>
     public class ConfigurationProvider
     {
-        private List<IAnnotationProvider>? annotationReaders;
-        private List<IDocumentReader>? documentReaders;
-        private List<IDocumentWriter>? documentWriters;
-        private Configuration? commandLineConfig;
+        private Func<Configuration, IEnumerable<IAnnotationProvider>> annotationReaders;
+        private Func<Configuration, IEnumerable<IDocumentReader>> documentReaders;
+        private Func<Configuration, IEnumerable<IDocumentWriter>> documentWriters;
+        private Configuration commandLineConfig;
+
+        public ConfigurationProvider()
+        {
+            this.annotationReaders = _ => Enumerable.Empty<IAnnotationProvider>();
+            this.documentReaders = _ => Enumerable.Empty<IDocumentReader>();
+            this.documentWriters = _ => Enumerable.Empty<IDocumentWriter>();
+            this.commandLineConfig = new Configuration();
+        }
 
         public ConfigurationProvider WithConfiguration(Configuration config)
         {
@@ -27,19 +37,22 @@ namespace Noted.Infra
             return this;
         }
 
-        public ConfigurationProvider WithAnnotationProviders(List<IAnnotationProvider> readers)
+        public ConfigurationProvider WithAnnotationProviders(
+            Func<Configuration, IEnumerable<IAnnotationProvider>> readers)
         {
             this.annotationReaders = readers;
             return this;
         }
 
-        public ConfigurationProvider WithReaders(List<IDocumentReader> readers)
+        public ConfigurationProvider WithReaders(
+            Func<Configuration, IEnumerable<IDocumentReader>> readers)
         {
             this.documentReaders = readers;
             return this;
         }
 
-        public ConfigurationProvider WithWriters(List<IDocumentWriter> writers)
+        public ConfigurationProvider WithWriters(
+            Func<Configuration, IEnumerable<IDocumentWriter>> writers)
         {
             this.documentWriters = writers;
             return this;
@@ -47,22 +60,19 @@ namespace Noted.Infra
 
         public Configuration Build()
         {
-            // TODO refactor the dependencies to take ILogger. Consider using
-            // higher order functions for this.
-            return new()
-            {
-                SourcePath = this.commandLineConfig!.SourcePath,
-                OutputPath = this.commandLineConfig.OutputPath,
-                ExtractionContextLength = this.commandLineConfig.ExtractionContextLength,
-                ExtractDocumentSections = this.commandLineConfig.ExtractDocumentSections,
-                Verbose = this.commandLineConfig.Verbose,
-                TreatSourceAsLibrary = this.commandLineConfig.TreatSourceAsLibrary,
+            this.commandLineConfig.FileSystem = new FileSystem();
+            this.commandLineConfig.Logger = this.commandLineConfig.Verbose
+                ? new ConsoleLogger()
+                : new NullLogger();
 
-                Logger = this.commandLineConfig.Verbose ? new ConsoleLogger() : new NullLogger(),
-                AnnotationProviders = this.annotationReaders!,
-                Readers = this.documentReaders!,
-                Writers = this.documentWriters!
-            };
+            this.commandLineConfig.AnnotationProviders =
+                this.annotationReaders(this.commandLineConfig).ToList();
+            this.commandLineConfig.Readers =
+                this.documentReaders(this.commandLineConfig).ToList();
+            this.commandLineConfig.Writers =
+                this.documentWriters(this.commandLineConfig).ToList();
+
+            return this.commandLineConfig;
         }
     }
 }

@@ -3,8 +3,8 @@
 
 namespace Noted.Core
 {
-    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -19,10 +19,12 @@ namespace Noted.Core
     public class ExtractWorkflow : ExtractWorkflowEvents, IWorkflow
     {
         private readonly IFileSystem fileSystem;
+        private readonly ILogger logger;
 
-        public ExtractWorkflow(IFileSystem fileSystem)
+        public ExtractWorkflow(IFileSystem fileSystem, ILogger logger)
         {
             this.fileSystem = fileSystem;
+            this.logger = logger;
         }
 
         // Configurations
@@ -48,6 +50,8 @@ namespace Noted.Core
         {
             this.Raise(new WorkflowStartEventArgs());
 
+            var stopWatch = Stopwatch.StartNew();
+
             // Extract external annotations for the library
             var externalAnnotations = configuration
                 .AnnotationProviders
@@ -56,19 +60,23 @@ namespace Noted.Core
                     provider.GetAnnotations(configuration.SourcePath))
                 .GroupBy(annotation => annotation.Document)
                 .ToDictionary(g => g.Key);
+            this.logger.Info("ExtractWorkflow: Found {0} documents with external annotations.", externalAnnotations.Count);
 
             var readersWithExtension = configuration
                 .Readers
                 .SelectMany(r => r.SupportedExtensions.Select(ext => (ext, r)))
                 .ToDictionary(r => $".{r.ext}", r => r.r);
+            this.logger.Info("ExtractWorkflow: {0} readers are configured.", readersWithExtension.Count);
 
             foreach (var file in this.EnumerateDocuments(configuration.SourcePath, readersWithExtension.Keys))
             {
+                this.logger.Info("ExtractWorkflow: Processing document: {0}.", file);
                 if (!readersWithExtension.TryGetValue(
                     Path.GetExtension(file),
                     out var reader))
                 {
                     // Skip the file
+                    this.logger.Debug("ExtractWorkflow: Skipped file as no readers are configured.");
                     continue;
                 }
 
@@ -88,15 +96,23 @@ namespace Noted.Core
                         var key = externalAnnotations.Keys
                             .FirstOrDefault(k => k.IsSimilar(docRef));
 
-                        return key == null ? new List<Annotation>() : externalAnnotations[key].ToList();
+                        if (key == null)
+                        {
+                            this.logger.Debug("No external annotations are found.");
+                            return new List<Annotation>();
+                        }
+
+                        return externalAnnotations[key].ToList();
                     });
 
                 document.Source = file;
-                await this.WriteDocument(document, configuration);
-                this.Raise(new ExtractionCompletedEventArgs { Document = document });
+                var outputPath = await this.WriteDocument(document, configuration);
+                this.Raise(new ExtractionCompletedEventArgs { Document = document, OutputPath = outputPath });
+                this.logger.Info("ExtractWorkflow: Completed processing {0}.", file);
             }
 
-            this.Raise(new WorkflowCompleteEventArgs());
+            stopWatch.Stop();
+            this.Raise(new WorkflowCompleteEventArgs { ElapsedTime = stopWatch.Elapsed });
             return 0;
         }
 
@@ -111,7 +127,7 @@ namespace Noted.Core
             return new[] { sourcePath };
         }
 
-        private async Task WriteDocument(
+        private async Task<string> WriteDocument(
             Document document,
             Configuration configuration)
         {
@@ -127,6 +143,8 @@ namespace Noted.Core
 
             await using var stream = this.fileSystem.OpenPathForWrite(outputPath);
             await writer.Write(configuration, document, stream);
+
+            return outputPath;
         }
     }
 }

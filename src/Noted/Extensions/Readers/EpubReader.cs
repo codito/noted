@@ -12,10 +12,18 @@ namespace Noted.Extensions.Readers
     using AngleSharp.XPath;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
     using VersOne.Epub;
 
     public class EpubReader : IDocumentReader
     {
+        private readonly ILogger logger;
+
+        public EpubReader(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public List<string> SupportedExtensions => new() { "epub" };
 
         public async Task<Document> Read(

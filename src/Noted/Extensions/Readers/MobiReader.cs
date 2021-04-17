@@ -11,11 +11,19 @@ namespace Noted.Extensions.Readers
     using Ephemerality.Unpack.Mobi;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
     using Noted.Extensions.Readers.Common;
     using Noted.Extensions.Readers.Mobi;
 
     public class MobiReader : IDocumentReader
     {
+        private readonly ILogger logger;
+
+        public MobiReader(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         // TODO add support for azw3
         public List<string> SupportedExtensions => new() { "mobi" };
 

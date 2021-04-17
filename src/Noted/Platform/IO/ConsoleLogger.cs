@@ -3,24 +3,24 @@
 
 namespace Noted.Platform.IO
 {
-    using System;
     using Noted.Core.Platform.IO;
+    using Spectre.Console;
 
     public class ConsoleLogger : ILogger
     {
         public void Debug(string format, params object?[]? arg)
         {
-            Console.Out.WriteLine($"[DEBUG] {format}", arg!);
+            AnsiConsole.MarkupLine($"[grey]DEBUG: {format}[/]", arg!);
         }
 
         public void Error(string format, params object?[]? arg)
         {
-            Console.Out.WriteLine($"[ERROR] {format}", arg!);
+            AnsiConsole.MarkupLine($"[red]ERROR: {format}[/]", arg!);
         }
 
         public void Info(string format, params object?[]? arg)
         {
-            Console.Out.WriteLine($"[DEBUG] {format}", arg!);
+            AnsiConsole.MarkupLine($"[grey]INFO: {format}[/]", arg!);
         }
     }
 }

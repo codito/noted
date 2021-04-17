@@ -10,24 +10,29 @@ namespace Noted.Tests.Extensions.Readers
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
+    using Noted.Core.Platform.IO;
     using Noted.Extensions.Readers;
 
     [TestClass]
     public class MobiReaderTests
     {
+        private readonly MobiReader reader;
+
+        public MobiReaderTests()
+        {
+            this.reader = new MobiReader(new NullLogger());
+        }
+
         [TestMethod]
         public void MobiReaderShouldSupportMobiFileExtensions()
         {
-            var reader = new MobiReader();
-
-            CollectionAssert.AreEquivalent(new[] { "mobi" }, reader.SupportedExtensions);
+            CollectionAssert.AreEquivalent(new[] { "mobi" }, this.reader.SupportedExtensions);
         }
 
         [TestMethod]
         public async Task MobiReaderShouldParseAnnotationsAndTableOfContent()
         {
             await using var stream = AssetFactory.GetAsset("pg42324.mobi");
-            var reader = new MobiReader();
             var annotations = new List<Annotation>
             {
                 new(
@@ -42,7 +47,7 @@ namespace Noted.Tests.Extensions.Readers
                     DateTime.MinValue)
             };
 
-            var document = await reader.Read(
+            var document = await this.reader.Read(
                 stream,
                 new ReaderOptions(),
                 _ => annotations);

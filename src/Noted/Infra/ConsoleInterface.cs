@@ -6,9 +6,8 @@ namespace Noted.Infra
     using System;
     using System.Collections.Generic;
     using System.CommandLine;
-    using System.CommandLine.Invocation;
-    using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Noted.Core;
 
@@ -17,9 +16,16 @@ namespace Noted.Infra
     /// </summary>
     public class ConsoleInterface
     {
-        private string[] arguments = null!;
-        private ConfigurationProvider configurationProvider = null!;
-        private IDictionary<string, IWorkflow> workflows = null!;
+        private string[] arguments;
+        private ConfigurationProvider configurationProvider;
+        private Dictionary<string, Func<Configuration, IWorkflow>> workflowFactory;
+
+        public ConsoleInterface()
+        {
+            this.arguments = Array.Empty<string>();
+            this.configurationProvider = new ConfigurationProvider();
+            this.workflowFactory = new Dictionary<string, Func<Configuration, IWorkflow>>();
+        }
 
         public ConsoleInterface WithArguments(string[] args)
         {
@@ -33,111 +39,19 @@ namespace Noted.Infra
             return this;
         }
 
-        public ConsoleInterface WithWorkflows(IDictionary<string, IWorkflow> workflows)
+        public ConsoleInterface WithWorkflows(Dictionary<string, Func<Configuration, IWorkflow>> createWorkflow)
         {
-            this.workflows = workflows;
+            this.workflowFactory = createWorkflow;
             return this;
         }
 
         public Task<int> RunAsync()
         {
-            var contextOption = new Option<byte>(
-                "--context",
-                () => 0,
-                "extract <context> lines of text before and after the annotation");
-            contextOption.AddAlias("-c");
-            var tocOption = new Option<bool>(
-                "--toc",
-                () => true,
-                "extract table of contents and align annotations");
-            tocOption.AddAlias("-t");
-            var verboseOption = new Option<bool>(
-                "--verbose",
-                () => false,
-                "enable verbose logging");
-            verboseOption.AddAlias("-v");
-
-            var rootCommand = new RootCommand
-            {
-                contextOption,
-                tocOption,
-                new Argument<string>(
-                    "sourcePath",
-                    "Source document or directory of documents to extract annotations"),
-                new Argument<string>(
-                    "outputPath",
-                    "Destination file or directory")
-            };
-
-            // rootCommand.Name = "extract";
-            rootCommand.Description = "Extracts highlights and notes from documents and save them as markdown";
-            rootCommand.Handler = CommandHandler.Create<CommandLineArguments>(
-             async cliArgs =>
-             {
-                 try
-                 {
-                     var configuration = this.configurationProvider
-                         .WithConfiguration(cliArgs.ToConfiguration())
-                         .Build();
-                     var extractWorkflow = this.workflows.Single().Value;
-
-                     using var consolePresenter = new ConsolePresenter((ExtractWorkflowEvents)extractWorkflow);
-                     await extractWorkflow.RunAsync(configuration);
-                     return 0;
-                 }
-                 catch (ArgumentException e)
-                 {
-                     Console.Error.WriteLine($"Required argument is not provided: {e.Message}.");
-                     return 1;
-                 }
-                 catch (OperationCanceledException)
-                 {
-                     Console.Error.WriteLine("Aborted current operation.");
-                     return -1;
-                 }
-             });
-
-            return rootCommand.InvokeAsync(this.arguments);
-        }
-
-        private class CommandLineArguments
-        {
-            public byte Context { get; set; }
-
-            public bool ExtractDocumentSections { get; set; }
-
-            public string SourcePath { get; set; } = null!;
-
-            public string OutputPath { get; set; } = null!;
-
-            public bool Verbose { get; set; }
-
-            public Configuration ToConfiguration()
-            {
-                if (!File.Exists(this.SourcePath) && !Directory.Exists(this.SourcePath))
-                {
-                    throw new ArgumentException(nameof(this.SourcePath));
-                }
-
-                // Source as library considers the input path as a Kindle or similar
-                // library. All documents will be considered for extraction.
-                var sourceAsLibrary = File.GetAttributes(this.SourcePath)
-                    .HasFlag(FileAttributes.Directory);
-                if (sourceAsLibrary && !Directory.Exists(this.OutputPath))
-                {
-                    throw new ArgumentException(nameof(this.OutputPath));
-                }
-
-                return new()
-                {
-                    ExtractionContextLength = this.Context,
-                    ExtractDocumentSections = this.ExtractDocumentSections,
-                    Verbose = this.Verbose,
-                    SourcePath = this.SourcePath,
-                    OutputPath = this.OutputPath,
-                    TreatSourceAsLibrary = sourceAsLibrary
-                };
-            }
+            return ExtractCommand
+                .Create(
+                    this.configurationProvider,
+                    this.workflowFactory.Single().Value)
+                .InvokeAsync(this.arguments);
         }
     }
 }

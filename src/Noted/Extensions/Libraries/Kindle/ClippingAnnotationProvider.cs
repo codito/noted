@@ -14,10 +14,14 @@ namespace Noted.Extensions.Libraries.Kindle
     {
         private const string ClippingsFile = "My Clippings.txt";
         private readonly IFileSystem fileSystem;
+        private readonly ILogger logger;
 
-        public ClippingAnnotationProvider(IFileSystem fileSystem)
+        public ClippingAnnotationProvider(
+            IFileSystem fileSystem,
+            ILogger logger)
         {
             this.fileSystem = fileSystem;
+            this.logger = logger;
         }
 
         public bool IsAvailable(string sourcePath)

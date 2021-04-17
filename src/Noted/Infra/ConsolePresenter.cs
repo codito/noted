@@ -6,6 +6,7 @@ namespace Noted.Infra
     using System;
     using System.Linq;
     using Noted.Core;
+    using Spectre.Console;
 
     public class ConsolePresenter : IDisposable
     {
@@ -31,22 +32,32 @@ namespace Noted.Infra
 
         private void WorkflowStarted(object? sender, ExtractWorkflowEvents.WorkflowStartEventArgs e)
         {
-            Console.WriteLine("Started extraction...");
         }
 
         private void WorkflowCompleted(object? sender, ExtractWorkflowEvents.WorkflowCompleteEventArgs e)
         {
-            Console.WriteLine("Completed.");
+            AnsiConsole.MarkupLine("[bold green]Completed in {0:0.00}s.[/]", e.ElapsedTime.TotalSeconds);
         }
 
         private void ExtractionStarted(object? sender, ExtractWorkflowEvents.ExtractionStartedEventArgs e)
         {
-            Console.WriteLine($"  Document: {e.FileName}");
+            AnsiConsole.MarkupLine($"[bold olive]>[/] Extracting [blue]{e.FileName}[/]");
         }
 
         private void ExtractionCompleted(object? sender, ExtractWorkflowEvents.ExtractionCompletedEventArgs e)
         {
-            Console.WriteLine($"  Completed: {e.Document.Annotations.Count()}");
+            var authorMsg = string.IsNullOrEmpty(e.Document.Author)
+                ? string.Empty
+                : $" by [aqua]{e.Document.Author}[/]";
+            var sectionMsg = e.Document.Sections.Any()
+                ? $" in [aqua]{e.Document.Sections.Count()}[/] sections"
+                : string.Empty;
+
+            // AnsiConsole.Cursor.SetPosition(0, Console.CursorTop);
+            AnsiConsole.MarkupLine($" [bold green]✓[/] [aqua]{e.Document.Title}[/]{authorMsg}");
+            AnsiConsole.MarkupLine($" [bold green]✓[/] [aqua]{e.Document.Annotations.Count()}[/] annotations{sectionMsg}");
+            AnsiConsole.MarkupLine($" [bold green]✓[/] Saved to [blue]{e.OutputPath}[/]");
+            AnsiConsole.MarkupLine(string.Empty);
         }
     }
 }

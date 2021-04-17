@@ -42,6 +42,13 @@ namespace Noted.Core
 
         public class WorkflowCompleteEventArgs : EventArgs
         {
+            public int DocumentCount { get; set; }
+
+            public int AnnotationCount { get; set; }
+
+            public int SectionCount { get; set; }
+
+            public TimeSpan ElapsedTime { get; set; }
         }
 
         public class ExtractionStartedEventArgs : EventArgs
@@ -52,6 +59,8 @@ namespace Noted.Core
         public class ExtractionCompletedEventArgs : EventArgs
         {
             public Document Document { get; init; } = null!;
+
+            public string OutputPath { get; init; } = null!;
         }
     }
 }
