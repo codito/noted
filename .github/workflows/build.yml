@@ -25,19 +25,16 @@ jobs:
           dotnet test --configuration Release
       - name: Publish
         run: dotnet publish src/Noted -o src/Noted/bin/Publish/ --configuration Release
-      - name: Upload build artifacts (CLI)
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: Noted
+          name: Noted.${{ matrix.os }}
           path: src/Noted/bin/Publish/
 
   publish:
     if: contains(github.ref, 'tags/v') # only publish tagged versions
     needs: [test]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rid: [win-x64, linux-x64]
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -50,20 +47,24 @@ jobs:
           dotnet-version: 5.0.x
       - name: Extract version
         id: extract_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
         shell: bash
       - name: Build
         run: |
-          cd ./src/Noted
-          dotnet publish -c Release --self-contained false -r ${{ matrix.rid }} -o ./bin/Portable.${{ matrix.rid }}
-          dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }}
-          zip -r bin/Noted.${{ env.NOTED_VERSION }}.Portable.${{ matrix.rid }} ./bin/Portable.${{ matrix.rid }}
-          zip -r Noted.${{ env.NOTED_VERSION }}.${{ matrix.rid }} ./bin/${{ matrix.rid }}
+          dotnet publish src/Noted -c Release --self-contained false -r win-x64 -o ./src/Noted/bin/Portable.win-x64
+          dotnet publish src/Noted -c Release --self-contained false -r linux-x64 -o ./src/Noted/bin/Portable.linux-x64
+          dotnet publish src/Noted -c Release --self-contained -r win-x64 -o ./src/Noted/bin/win-x64
+          dotnet publish src/Noted -c Release --self-contained -r linux-64 -o ./src/Noted/bin/linux-x64
+          zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.Portable.win-x64 ./src/Noted/bin/Portable.win-x64
+          zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.Portable.linux-x64 ./src/Noted/bin/Portable.linux-x64
+          zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.win-x64 ./src/Noted/bin/win-x64
+          zip -r src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.linux-x64 ./src/Noted/bin/linux-x64
+          ls src/Noted/bin/*.zip
       - name: Create Release
         uses: ncipollo/release-action@v1.8.4
         with:
-          name: Release ${{ env.NOTED_VERSION }}
+          name: Release ${{ steps.extract_version.outputs.version }}
           body: |
               [Changelog](https://github.com/codito/Noted/blob/master/CHANGELOG.md)
-          artifacts: "src/Noted/*.zip"
+          artifacts: "src/Noted/bin/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
