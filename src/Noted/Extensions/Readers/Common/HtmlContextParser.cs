@@ -5,6 +5,7 @@ namespace Noted.Extensions.Readers.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Noted.Extensions.Readers.Common
     public class HtmlContextParser
     {
         public async Task<(List<Annotation> Annotations, DateTime CreatedDate, DateTime ModifiedDate)> AddContext(
-            string contentHtml,
+            Stream stream,
             List<DocumentSection> sections,
             IEnumerable<(LineLocation Location, Annotation Annotation)> externalAnnotations)
         {
@@ -25,12 +26,10 @@ namespace Noted.Extensions.Readers.Common
             {
                 IsKeepingSourceReferences = true
             });
-            var document = await parser.ParseDocumentAsync(contentHtml);
 
             var sb = new StringBuilder();
             var nodeIndex = 0;
             var textIndex = 0;
-            var sectionIndex = 0;
             var textNodeMap = new Dictionary<int, int>();
             var textSectionMap = new Dictionary<int, DocumentSection>();
 
@@ -40,33 +39,49 @@ namespace Noted.Extensions.Readers.Common
             //  textIndex -> nodeIndex
             //  textIndex -> sectionIndex
             // This reduces further processing to finding each annotation and mapping it
+            using var reader = new BinaryReader(stream, Encoding.UTF8);
             var annotations = new List<Annotation>();
-            var nodes = document.Body.SelectNodes("//text()");
-            foreach (var node in nodes)
+
+            // Store html nodes in the book along with their location. Location
+            // is section begin offset + node offset in section html content
+            var nodes = new List<(INode, int)>();
+
+            // Sort sections because table of contents may have an entry which
+            // could point to a location that's already parsed. E.g. entry4 can
+            // point to offset that's between entry1 and entry2
+            sections.Sort((a, b) => a.Location.CompareTo(b.Location));
+            for (var ix = 0; ix < sections.Count; ix++)
             {
-                var innerText = HttpUtility.HtmlDecode(node.Text().Trim());
-                if (innerText.Length == 0)
+                // Parse the html for current section
+                var section = sections[ix];
+                reader.BaseStream.Seek(section.Location, SeekOrigin.Begin);
+                var length = ix + 1 < sections.Count
+                    ? sections[ix + 1].Location - section.Location
+                    : stream.Length - section.Location;
+                var contentHtml = Encoding.UTF8.GetString(reader.ReadBytes((int)length));
+                var document = await parser.ParseDocumentAsync(contentHtml);
+
+                var sectionNodes = document.Body.SelectNodes("//text()");
+                foreach (var node in sectionNodes)
                 {
+                    var innerText = HttpUtility.HtmlDecode(node.Text().Trim());
+                    if (innerText.Length == 0)
+                    {
+                        // Skip any empty nodes since they can never have an annotation
+                        continue;
+                    }
+
+                    sb.AppendFormat("{0} ", innerText);
+                    textNodeMap.Add(textIndex, nodeIndex);
+                    textSectionMap[textIndex] = section;
+
                     nodeIndex += 1;
-                    continue;
+                    textIndex += innerText.Length + 1;
+
+                    // Location of a node is absolute i.e. section start + relative offset
+                    // of node in the section
+                    nodes.Add((node, section.Location + node.ParentElement.SourceReference.Position.Index));
                 }
-
-                sb.AppendFormat("{0} ", innerText);
-                textNodeMap.Add(textIndex, nodeIndex);
-
-                // Note that SourceReference.Index is the offset in the actual html.
-                // textIndex is an offset in the trimmed html which is a local concept.
-                // Externally, only SourceReference.Index must be shared.
-                if (sectionIndex < sections.Count &&
-                    node.ParentElement.SourceReference.Position.Index > sections[sectionIndex].Location)
-                {
-                    // Add offsets to _beginning_ of a text segment which is _after_ the
-                    // section. It must be beginning of this section.
-                    textSectionMap[textIndex] = sections[sectionIndex++];
-                }
-
-                nodeIndex += 1;
-                textIndex += innerText.Length + 1;
             }
 
             var bookText = sb.ToString();
@@ -105,11 +120,11 @@ namespace Noted.Extensions.Readers.Common
                     for (var i = startNode.Index; i <= endNode.Index; i++)
                     {
                         var key = textNodeMap[nodeMapKeys[i]];
-                        context.AppendLine(nodes[key].ParentElement.InnerHtml);
+                        context.AppendLine(nodes[key].Item1.ParentElement.InnerHtml);
                     }
 
                     var startNodeIndex = textNodeMap[nodeMapKeys[startNode.Index]];
-                    annotation.Context.Location = nodes[startNodeIndex].ParentElement.SourceReference.Position.Index;
+                    annotation.Context.Location = nodes[startNodeIndex].Item2;
                     annotation.Context.Content = context.ToString();
 
                     // Find headers which contain this text

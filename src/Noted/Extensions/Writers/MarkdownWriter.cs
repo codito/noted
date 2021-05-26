@@ -45,9 +45,14 @@ namespace Noted.Extensions.Writers
                            sectionIterator.Current.Location <=
                            annotation.Context.Location)
                     {
-                        var (title, level, _) = sectionIterator.Current;
+                        var (title, level, location) = sectionIterator.Current;
                         await writer.WriteLineAsync(
                             $"{new string('#', level)} {title}");
+                        if (configuration.Verbose)
+                        {
+                            await writer.WriteLineAsync($"<!-- Location: {location} -->");
+                        }
+
                         await writer.WriteLineAsync();
                         sectionIterator.MoveNext();
                     }
@@ -58,6 +63,14 @@ namespace Noted.Extensions.Writers
                 {
                     currentPage = annotation.Context.PageNumber;
                     await writer.WriteLineAsync($"**Page {currentPage}**");
+                    if (configuration.Verbose)
+                    {
+                        var section = annotation.Context.DocumentSection;
+                        var location = annotation.Context.Location;
+                        await writer.WriteLineAsync($"<!-- Location: {location} -->");
+                        await writer.WriteLineAsync($"<!-- Section: {section?.Level} - {section?.Title} at {section?.Location} -->");
+                    }
+
                     await writer.WriteLineAsync();
                 }
 

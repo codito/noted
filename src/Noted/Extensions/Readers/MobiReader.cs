@@ -33,7 +33,6 @@ namespace Noted.Extensions.Readers
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
         {
             var mobi = new MobiMetadata(stream);
-            var text = await new StreamReader(mobi.GetRawMlStream()).ReadToEndAsync();
             var docRef = new DocumentReference
             {
                 Title = mobi.Title,
@@ -59,8 +58,10 @@ namespace Noted.Extensions.Readers
             var sections = await new HtmlSectionParser()
                 .Parse(tocStream)
                 .ToListAsync();
+
+            var rawMlStream = mobi.GetRawMlStream();
             var (annotations, createdDate, modifiedDate) = await new HtmlContextParser().AddContext(
-                text,
+                rawMlStream,
                 sections,
                 externalAnnotations);
 

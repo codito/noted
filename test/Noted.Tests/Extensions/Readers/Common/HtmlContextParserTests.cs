@@ -5,13 +5,15 @@ namespace Noted.Tests.Extensions.Readers.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Noted.Core.Models;
     using Noted.Extensions.Readers.Common;
 
     [TestClass]
-    public class HtmlContextParserTests
+    public class HtmlContextParserTests : IDisposable
     {
         private const string SampleContent =
             @"<h1>Ch1</h1><p>Never call yourself a philosopher, nor talk a great deal among the unlearned about theorems, but act conformably to them.</p>
@@ -27,11 +29,13 @@ namespace Noted.Tests.Extensions.Readers.Common
             new("Ch2", 1, 141)
         };
 
+        private readonly Stream sampleContentStream;
         private readonly List<Annotation> annotations;
         private readonly HtmlContextParser parser;
 
         public HtmlContextParserTests()
         {
+            this.sampleContentStream = new MemoryStream(Encoding.UTF8.GetBytes(SampleContent));
             this.parser = new HtmlContextParser();
             this.annotations = new List<Annotation>
             {
@@ -40,11 +44,16 @@ namespace Noted.Tests.Extensions.Readers.Common
             };
         }
 
+        public void Dispose()
+        {
+            this.sampleContentStream?.Dispose();
+        }
+
         [TestMethod]
         public async Task HtmlContextParserShouldAddContextToAnnotations()
         {
             var (a, _, _) = await this.parser.AddContext(
-                SampleContent,
+                this.sampleContentStream,
                 SampleSections,
                 new[] { (new LineLocation(1, 2), this.annotations[0]) });
 
@@ -57,7 +66,7 @@ namespace Noted.Tests.Extensions.Readers.Common
         public async Task HtmlContextParserShouldAddContextWhenAnnotationSpansOverElements()
         {
             var (a, _, _) = await this.parser.AddContext(
-                SampleContent,
+                this.sampleContentStream,
                 SampleSections,
                 new[] { (new LineLocation(1, 2), this.annotations[1]) });
 
