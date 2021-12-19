@@ -1,21 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{003AE7DE-8054-48A0-BBF4-3456C4BD1D83}"
-ProjectSection(SolutionItems) = preProject
-	README.md = README.md
-	LICENSE = LICENSE
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noted", "src\Noted\Noted.csproj", "{5080EF68-6A1C-4D31-AC29-650D60A49483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noted", "src\Noted\Noted.csproj", "{5080EF68-6A1C-4D31-AC29-650D60A49483}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7D5CC75F-BF11-4EA5-8940-6C83614158B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Noted.Tests", "test\Noted.Tests\Noted.Tests.csproj", "{BC133CBA-D5B6-4FC5-8436-512A34D12A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Noted.Tests", "test\Noted.Tests\Noted.Tests.csproj", "{BC133CBA-D5B6-4FC5-8436-512A34D12A39}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{376C5D6A-E00F-43D0-B13D-D5F001513D12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A018A40A-B688-4483-9D5F-C2DF57C05E39}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,9 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5080EF68-6A1C-4D31-AC29-650D60A49483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -55,9 +57,15 @@ Global
 		{BC133CBA-D5B6-4FC5-8436-512A34D12A39}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC133CBA-D5B6-4FC5-8436-512A34D12A39}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5080EF68-6A1C-4D31-AC29-650D60A49483} = {003AE7DE-8054-48A0-BBF4-3456C4BD1D83}
 		{BC133CBA-D5B6-4FC5-8436-512A34D12A39} = {7D5CC75F-BF11-4EA5-8940-6C83614158B1}
 		{376C5D6A-E00F-43D0-B13D-D5F001513D12} = {7D5CC75F-BF11-4EA5-8940-6C83614158B1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFAAE264-BC2E-4BFE-9A08-83BE7F50BC4E}
 	EndGlobalSection
 EndGlobal
