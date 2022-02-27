@@ -20,7 +20,7 @@
     <PackageReference Include="PdfPig" Version="0.1.4" />
     <PackageReference Include="Spectre.Console" Version="0.38.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
-    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
     <PackageReference Include="VersOne.Epub" Version="3.0.3.1" />
 
     <!-- Workaround for publish because of JTForks.MiscUtil -->
