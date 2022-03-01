@@ -17,7 +17,7 @@
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.3" />
     <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
     <PackageReference Include="Markdig" Version="0.27.0" />
-    <PackageReference Include="PdfPig" Version="0.1.4" />
+    <PackageReference Include="PdfPig" Version="0.1.5" />
     <PackageReference Include="Spectre.Console" Version="0.43.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
