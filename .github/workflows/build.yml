@@ -26,7 +26,7 @@ jobs:
       - name: Publish
         run: dotnet publish src/Noted -o src/Noted/bin/Publish/ --configuration Release
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Noted.${{ matrix.os }}
           path: src/Noted/bin/Publish/
