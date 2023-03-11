@@ -61,7 +61,7 @@ jobs:
           7z a src/Noted/bin/Noted.${{ steps.extract_version.outputs.version }}.linux-x64.zip ./src/Noted/bin/linux-x64 -r
           ls -l src/Noted/bin
       - name: Create Release
-        uses: ncipollo/release-action@v1.10.0
+        uses: ncipollo/release-action@v1.12.0
         with:
           name: Release ${{ steps.extract_version.outputs.version }}
           body: |
