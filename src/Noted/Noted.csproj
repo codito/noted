@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="AngleSharp.XPath" Version="1.1.7" />
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.5" />
     <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
