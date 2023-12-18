@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PdfPig" Version="0.1.5" />
+    <PackageReference Include="PdfPig" Version="0.1.8" />
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.5" />
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />

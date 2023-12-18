@@ -33,7 +33,7 @@ namespace Noted.Extensions.Readers.Mobi
                 return Stream.Null;
             }
 
-            var tocFilePos = int.Parse(tocNode.GetAttribute("filepos"));
+            var tocFilePos = int.Parse(tocNode.GetAttribute("filepos") ?? "0");
             if (tocFilePos > contentStream.Length)
             {
                 // Malformed book: TOC is beyond the book text

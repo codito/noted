@@ -47,7 +47,7 @@ namespace Noted.Extensions.Readers
 
             var content = new Dictionary<int, string>();
             var line = 1;
-            foreach (EpubTextContentFile textContentFile in epub.ReadingOrder)
+            foreach (EpubLocalTextContentFile textContentFile in epub.ReadingOrder)
             {
                 var parser = new HtmlParser(new HtmlParserOptions
                 {

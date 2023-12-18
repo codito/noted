@@ -19,6 +19,7 @@ namespace Noted.Extensions.Readers
     using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
     using UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor;
     using UglyToad.PdfPig.Geometry;
+    using UglyToad.PdfPig.Util;
     using Annotation = Noted.Core.Models.Annotation;
     using AnnotationType = UglyToad.PdfPig.Annotations.AnnotationType;
 
@@ -28,10 +29,12 @@ namespace Noted.Extensions.Readers
             new("\\w\\-$", RegexOptions.Compiled);
 
         private ILogger logger;
+        private IWordExtractor wordExtractor;
 
         public PdfReader(ILogger logger)
         {
             this.logger = logger;
+            this.wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
         }
 
         public List<string> SupportedExtensions => new() { "pdf" };
@@ -63,8 +66,8 @@ namespace Noted.Extensions.Readers
             foreach (var page in doc.GetPages())
             {
                 var letters = page.Letters;
-                var words = NearestNeighbourWordExtractor.Instance
-                    .GetWords(letters, GetWordExtractOptions())
+                var words = this.wordExtractor
+                    .GetWords(letters)
                     .ToList();
                 foreach (var annotation in page.ExperimentalAccess.GetAnnotations().Where(a => a.Type.Equals(AnnotationType.Highlight)))
                 {

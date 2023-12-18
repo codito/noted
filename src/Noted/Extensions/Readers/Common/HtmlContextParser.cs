@@ -80,7 +80,7 @@ namespace Noted.Extensions.Readers.Common
 
                     // Location of a node is absolute i.e. section start + relative offset
                     // of node in the section
-                    nodes.Add((node, section.Location + node.ParentElement.SourceReference.Position.Index));
+                    nodes.Add((node, section.Location + node.ParentElement?.SourceReference?.Position.Index ?? 0));
                 }
             }
 
@@ -120,7 +120,7 @@ namespace Noted.Extensions.Readers.Common
                     for (var i = startNode.Index; i <= endNode.Index; i++)
                     {
                         var key = textNodeMap[nodeMapKeys[i]];
-                        context.AppendLine(nodes[key].Item1.ParentElement.InnerHtml);
+                        context.AppendLine(nodes[key].Item1.ParentElement?.InnerHtml);
                     }
 
                     var startNodeIndex = textNodeMap[nodeMapKeys[startNode.Index]];
