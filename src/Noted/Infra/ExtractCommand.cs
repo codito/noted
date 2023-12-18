@@ -15,7 +15,7 @@ namespace Noted.Infra
     {
         private static readonly string[] ContextAliases = ["-c", "--context"];
         private static readonly string[] TocAliases = ["-t", "--toc"];
-        private static readonly string[] aliases = new[] { "-v", "--verbose" };
+        private static readonly string[] VerboseAliases = ["-v", "--verbose"];
 
         public static RootCommand Create(ConfigurationProvider configurationProvider, Func<Configuration, IWorkflow> createWorkflow)
         {
@@ -28,7 +28,7 @@ namespace Noted.Infra
                 () => true,
                 "extract table of contents and align annotations");
             var verboseOption = new Option<bool>(
-                aliases,
+                VerboseAliases,
                 () => false,
                 "enable verbose logging");
 
