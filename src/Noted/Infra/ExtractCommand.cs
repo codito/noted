@@ -13,16 +13,17 @@ namespace Noted.Infra
 
     public static class ExtractCommand
     {
-        private static readonly string[] ALIASES = new[] { "-c", "--context" };
+        private static readonly string[] ContextAliases = ["-c", "--context"];
+        private static readonly string[] TocAliases = ["-t", "--toc"];
 
         public static RootCommand Create(ConfigurationProvider configurationProvider, Func<Configuration, IWorkflow> createWorkflow)
         {
             var contextOption = new Option<bool>(
-                ALIASES,
+                ContextAliases,
                 () => false,
                 "extract the paragraph containing an annotation");
             var tocOption = new Option<bool>(
-                new[] { "-t", "--toc" },
+                TocAliases,
                 () => true,
                 "extract table of contents and align annotations");
             var verboseOption = new Option<bool>(

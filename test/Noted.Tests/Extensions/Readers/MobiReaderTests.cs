@@ -16,7 +16,7 @@ namespace Noted.Tests.Extensions.Readers
     [TestClass]
     public class MobiReaderTests
     {
-        private static readonly string[] EXPECTED = new[] { "mobi" };
+        private static readonly string[] EXPECTED = ["mobi"];
         private readonly MobiReader reader;
 
         public MobiReaderTests()

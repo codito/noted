@@ -20,16 +20,6 @@ namespace Noted.Extensions.Libraries.Kindle
     {
         public const string AnnotationEndMarker = "==========";
 
-        private static readonly Regex BookInfoRegex = MyRegex();
-
-        private static readonly Regex AnnotationInfoRegex = new(
-            @"- Your (?<annotationType>\w+) on page (?<pageNumber>\d+) \| Location (?<startLoc>\d+)-?(?<endLoc>\d+)? \| Added on (?<date>.*)$",
-            RegexOptions.Compiled);
-
-        private static readonly Regex AnnotationInfoRegexWithoutPage = new(
-            @"- Your (?<annotationType>\w+) on Location (?<startLoc>\d+)-?(?<endLoc>\d+)? \| Added on (?<date>.*)$",
-            RegexOptions.Compiled);
-
         public static IEnumerable<Clipping> Parse(Stream stream)
         {
             // Annotations format
@@ -53,7 +43,7 @@ namespace Noted.Extensions.Libraries.Kindle
 
         public static Clipping ParseBookInfo(this Clipping clipping, string line)
         {
-            var match = BookInfoRegex.Match(line);
+            var match = BookInfoRegex().Match(line);
             if (!match.Success)
             {
                 throw new InvalidClippingException(
@@ -76,11 +66,11 @@ namespace Noted.Extensions.Libraries.Kindle
                     "Annotation information is null or invalid", line);
             }
 
-            var match = AnnotationInfoRegex.Match(line);
+            var match = AnnotationInfoRegex().Match(line);
             if (!match.Success)
             {
                 // Attempt to parse annotation info without page number
-                match = AnnotationInfoRegexWithoutPage.Match(line);
+                match = AnnotationInfoRegexWithoutPage().Match(line);
                 if (!match.Success)
                 {
                     throw new InvalidClippingException(
@@ -143,6 +133,12 @@ namespace Noted.Extensions.Libraries.Kindle
         }
 
         [GeneratedRegex(@"^\ufeff?(?<bookname>.*)\s\((?<bookauthor>.*)\)$", RegexOptions.Compiled)]
-        private static partial Regex MyRegex();
+        private static partial Regex BookInfoRegex();
+
+        [GeneratedRegex(@"- Your (?<annotationType>\w+) on page (?<pageNumber>\d+) \| Location (?<startLoc>\d+)-?(?<endLoc>\d+)? \| Added on (?<date>.*)$", RegexOptions.Compiled)]
+        private static partial Regex AnnotationInfoRegex();
+
+        [GeneratedRegex(@"- Your (?<annotationType>\w+) on Location (?<startLoc>\d+)-?(?<endLoc>\d+)? \| Added on (?<date>.*)$", RegexOptions.Compiled)]
+        private static partial Regex AnnotationInfoRegexWithoutPage();
     }
 }

@@ -29,9 +29,6 @@ namespace Noted.Extensions.Readers
     /// <param name="logger">Logger instance.</param>
     public partial class PdfReader(ILogger logger) : IDocumentReader
     {
-        private static readonly Regex HyphenWordBreak =
-            MyRegex();
-
         private readonly ILogger logger = logger;
         private readonly IWordExtractor wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
 
@@ -200,10 +197,10 @@ namespace Noted.Extensions.Readers
 
         private static string TrimSplitWord(string word)
         {
-            return HyphenWordBreak.IsMatch(word) ? word.TrimEnd('-') : $"{word} ";
+            return HyphenWordBreak().IsMatch(word) ? word.TrimEnd('-') : $"{word} ";
         }
 
         [GeneratedRegex("\\w\\-$", RegexOptions.Compiled)]
-        private static partial Regex MyRegex();
+        private static partial Regex HyphenWordBreak();
     }
 }
