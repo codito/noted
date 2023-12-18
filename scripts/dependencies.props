@@ -2,6 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- Static analysis -->
-    <StylecopVersion>1.2.0-beta.333</StylecopVersion>
+    <StylecopVersion>1.2.0-beta.507</StylecopVersion>
   </PropertyGroup>
 </Project>

@@ -54,7 +54,7 @@ namespace Noted.Infra
                 : string.Empty;
 
             // AnsiConsole.Cursor.SetPosition(0, Console.CursorTop);
-            AnsiConsole.MarkupLine($" [bold green]✓[/] [aqua]{e.Document.Title}[/]{authorMsg}");
+            AnsiConsole.MarkupLine($@" [bold green]✓[/] [aqua]{e.Document.Title ?? "Unknown title"}[/]{authorMsg}");
             AnsiConsole.MarkupLine($" [bold green]✓[/] [aqua]{e.Document.Annotations.Count()}[/] annotations{sectionMsg}");
             AnsiConsole.MarkupLine($" [bold green]✓[/] Saved to [blue]{e.OutputPath}[/]");
             AnsiConsole.MarkupLine(string.Empty);

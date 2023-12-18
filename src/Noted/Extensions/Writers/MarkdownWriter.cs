@@ -35,13 +35,13 @@ namespace Noted.Extensions.Writers
 
             var currentPage = 0;
             using var sectionIterator = document.Sections.GetEnumerator();
-            sectionIterator.MoveNext();
             foreach (var annotation in document.Annotations)
             {
                 // Print section header
                 if (configuration.ExtractDocumentSections)
                 {
-                    while (sectionIterator.Current != null &&
+                    while (sectionIterator.MoveNext() &&
+                           sectionIterator.Current != null &&
                            sectionIterator.Current.Location <=
                            annotation.Context.Location)
                     {
@@ -54,7 +54,6 @@ namespace Noted.Extensions.Writers
                         }
 
                         await writer.WriteLineAsync();
-                        sectionIterator.MoveNext();
                     }
                 }
 

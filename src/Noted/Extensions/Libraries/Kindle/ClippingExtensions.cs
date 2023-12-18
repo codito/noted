@@ -10,7 +10,8 @@ namespace Noted.Extensions.Libraries.Kindle
     {
         public static Annotation ToAnnotation(this Clipping clipping)
         {
-            return new(clipping.Content,
+            return new(
+                clipping.Content,
                 new DocumentReference
                 {
                     Title = clipping.Book,
