@@ -90,7 +90,7 @@ namespace Noted.Extensions.Libraries.Kindle
             try
             {
                 clipping.Type = Enum.Parse<ClippingType>(match.Groups["annotationType"].Value);
-                clipping.CreationDate = DateTime.ParseExact(match.Groups["date"].Value, "F", CultureInfo.CreateSpecificCulture("en-US"));
+                clipping.CreationDate = DateTime.ParseExact(match.Groups["date"].Value, "F", CultureInfo.CreateSpecificCulture("en-US"), DateTimeStyles.AllowWhiteSpaces);
 
                 var startIndex = int.Parse(match.Groups["startLoc"].Value);
                 var endIndex = startIndex;
