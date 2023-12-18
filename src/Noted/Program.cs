@@ -8,8 +8,8 @@ namespace Noted
     using System.Threading.Tasks;
     using Noted.Core;
     using Noted.Core.Extensions;
-    using Noted.Extensions.Libraries;
     using Noted.Extensions.Libraries.Kindle;
+    using Noted.Extensions.Libraries.KOReader;
     using Noted.Extensions.Readers;
     using Noted.Extensions.Writers;
     using Noted.Infra;

@@ -18,7 +18,7 @@ namespace Noted.Tests.Extensions.Readers.Mobi
             await using var rawMlStream = new MobiMetadata(stream).GetRawMlStream();
 
             var parser = new Mobi7Parser();
-            var contentStream = await parser.GetNavigationStream(rawMlStream);
+            var contentStream = await Mobi7Parser.GetNavigationStream(rawMlStream);
 
             Assert.IsNotNull(contentStream);
             Assert.AreEqual(4133, contentStream.Length);

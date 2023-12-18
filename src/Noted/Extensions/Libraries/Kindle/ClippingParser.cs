@@ -13,13 +13,14 @@ namespace Noted.Extensions.Libraries.Kindle
     using Noted.Core.Models;
     using Noted.Platform.IO;
 
-    public static class ClippingParser
+    /// <summary>
+    /// A parser for the Kindle clippings file.
+    /// </summary>
+    public static partial class ClippingParser
     {
         public const string AnnotationEndMarker = "==========";
 
-        private static readonly Regex BookInfoRegex = new(
-            @"^\ufeff?(?<bookname>.*)\s\((?<bookauthor>.*)\)$",
-            RegexOptions.Compiled);
+        private static readonly Regex BookInfoRegex = MyRegex();
 
         private static readonly Regex AnnotationInfoRegex = new(
             @"- Your (?<annotationType>\w+) on page (?<pageNumber>\d+) \| Location (?<startLoc>\d+)-?(?<endLoc>\d+)? \| Added on (?<date>.*)$",
@@ -140,5 +141,8 @@ namespace Noted.Extensions.Libraries.Kindle
             clipping.Content = text.ToString();
             return clipping;
         }
+
+        [GeneratedRegex(@"^\ufeff?(?<bookname>.*)\s\((?<bookauthor>.*)\)$", RegexOptions.Compiled)]
+        private static partial Regex MyRegex();
     }
 }

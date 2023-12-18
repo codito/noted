@@ -9,17 +9,11 @@ namespace Noted.Core.Models
     /// Location scheme defines the rules to locate content in a document.
     /// E.g. Kindle uses a line based location scheme.
     /// </summary>
-    public readonly struct LineLocation : IComparable
+    public readonly struct LineLocation(int start, int end) : IComparable
     {
-        public LineLocation(int start, int end)
-        {
-            this.Start = start;
-            this.End = end;
-        }
+        public int Start { get; } = start;
 
-        public int Start { get; }
-
-        public int End { get; }
+        public int End { get; } = end;
 
         public static string ToString(LineLocation location)
         {
@@ -34,9 +28,9 @@ namespace Noted.Core.Models
 
         public int CompareTo(object? obj)
         {
-            if (!(obj is LineLocation other))
+            if (obj is not LineLocation other)
             {
-                throw new ArgumentException(nameof(obj));
+                throw new ArgumentException(null, nameof(obj));
             }
 
             var startCompare = this.Start.CompareTo(other.Start);

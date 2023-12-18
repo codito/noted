@@ -6,7 +6,7 @@ namespace Noted.Tests.Extensions.Libraries
     using System.IO;
     using System.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Noted.Extensions.Libraries;
+    using Noted.Extensions.Libraries.KOReader;
 
     [TestClass]
     public class KOReaderAnnotationProviderTests

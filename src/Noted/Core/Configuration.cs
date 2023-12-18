@@ -14,9 +14,9 @@ namespace Noted.Core
     {
         public Configuration()
         {
-            this.AnnotationProviders = new List<IAnnotationProvider>();
-            this.Readers = new List<IDocumentReader>();
-            this.Writers = new List<IDocumentWriter>();
+            this.AnnotationProviders = [];
+            this.Readers = [];
+            this.Writers = [];
         }
 
         public int ExtractionContextLength { get; init; }
@@ -31,7 +31,7 @@ namespace Noted.Core
 
         public bool TreatSourceAsLibrary { get; init; }
 
-#region Dependencies
+        #region Dependencies
 
         // TODO evaluate if these should be a separate concept e.g. Environment
         public IFileSystem FileSystem { get; set; } = null!;
@@ -44,6 +44,6 @@ namespace Noted.Core
 
         public List<IDocumentWriter> Writers { get; set; }
 
-#endregion
+        #endregion
     }
 }

@@ -27,6 +27,7 @@ namespace Noted.Tests.Extensions.Readers
         private const string SampleText =
             "Now, the things within our power are by nature free, unrestricted, unhindered; but those beyond our power are weak, dependent, restricted, alien. Remember, then, that if you attribute freedom to things by nature dependent, and take what belongs to others for your own, you will be hindered, you will lament, you will be disturbed, you will find fault both with gods and men. But if you take for your own only that which is your own, and view what belongs to others just as it really is, then no one will ever compel you, no one will restrict you, you will find fault with no one, you will accuse no one, you will do nothing against your will; no one will hurt you, you will not have an enemy, nor will you suffer any harm.";
 
+        private static readonly string[] EXPECTED = new[] { "pdf" };
         private readonly PdfReader reader;
         private readonly Func<DocumentReference, List<Annotation>> emptyExternalAnnotations;
 
@@ -40,7 +41,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public void PdfReaderShouldSupportOnlyPdfFileExtension()
         {
-            CollectionAssert.AreEqual(new[] { "pdf" }, this.reader.SupportedExtensions);
+            CollectionAssert.AreEqual(EXPECTED, this.reader.SupportedExtensions);
         }
 
         [TestMethod]

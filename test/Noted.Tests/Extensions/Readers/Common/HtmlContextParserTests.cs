@@ -23,11 +23,11 @@ namespace Noted.Tests.Extensions.Readers.Common
 <blockquote><div></div></blockquote>
 <p>And, if anyone tells you that you know nothing, and you are not nettled at it, then you may be sure that you have begun your business.</p>";
 
-        private static readonly List<DocumentSection> SampleSections = new()
-        {
+        private static readonly List<DocumentSection> SampleSections =
+        [
             new("Ch1", 1,  0),
             new("Ch2", 1, 141)
-        };
+        ];
 
         private readonly Stream sampleContentStream;
         private readonly List<Annotation> annotations;
@@ -37,11 +37,11 @@ namespace Noted.Tests.Extensions.Readers.Common
         {
             this.sampleContentStream = new MemoryStream(Encoding.UTF8.GetBytes(SampleContent));
             this.parser = new HtmlContextParser();
-            this.annotations = new List<Annotation>
-            {
+            this.annotations =
+            [
                 CreateAnnotation("call yourself a philosopher"),
                 CreateAnnotation("eat as you ought. And, if anyone")
-            };
+            ];
         }
 
         public void Dispose()
@@ -52,7 +52,7 @@ namespace Noted.Tests.Extensions.Readers.Common
         [TestMethod]
         public async Task HtmlContextParserShouldAddContextToAnnotations()
         {
-            var (a, _, _) = await this.parser.AddContext(
+            var (a, _, _) = await HtmlContextParser.AddContext(
                 this.sampleContentStream,
                 SampleSections,
                 new[] { (new LineLocation(1, 2), this.annotations[0]) });
@@ -65,7 +65,7 @@ namespace Noted.Tests.Extensions.Readers.Common
         [TestMethod]
         public async Task HtmlContextParserShouldAddContextWhenAnnotationSpansOverElements()
         {
-            var (a, _, _) = await this.parser.AddContext(
+            var (a, _, _) = await HtmlContextParser.AddContext(
                 this.sampleContentStream,
                 SampleSections,
                 new[] { (new LineLocation(1, 2), this.annotations[1]) });

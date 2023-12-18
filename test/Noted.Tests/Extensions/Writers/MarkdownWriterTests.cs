@@ -26,7 +26,7 @@ public class MarkdownWriterTests
 
         document.Annotations = new List<Annotation>
         {
-            new Annotation(
+            new(
                 "dummy annotation",
                 document,
                 AnnotationType.Highlight,

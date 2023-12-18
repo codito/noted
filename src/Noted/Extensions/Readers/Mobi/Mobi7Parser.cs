@@ -14,7 +14,7 @@ namespace Noted.Extensions.Readers.Mobi
     /// </summary>
     public class Mobi7Parser
     {
-        public async Task<Stream> GetNavigationStream(Stream contentStream)
+        public static async Task<Stream> GetNavigationStream(Stream contentStream)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);

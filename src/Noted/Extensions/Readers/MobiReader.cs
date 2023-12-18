@@ -15,14 +15,9 @@ namespace Noted.Extensions.Readers
     using Noted.Extensions.Readers.Common;
     using Noted.Extensions.Readers.Mobi;
 
-    public class MobiReader : IDocumentReader
+    public class MobiReader(ILogger logger) : IDocumentReader
     {
-        private readonly ILogger logger;
-
-        public MobiReader(ILogger logger)
-        {
-            this.logger = logger;
-        }
+        private readonly ILogger logger = logger;
 
         // TODO add support for azw3
         public List<string> SupportedExtensions => new() { "mobi" };
@@ -54,13 +49,13 @@ namespace Noted.Extensions.Readers
             // var annotations = FullTextContextStrategy.AddContext(
             //     text,
             //     externalAnnotations);
-            var tocStream = new Mobi7Parser().GetNavigationStream(mobi.GetRawMlStream()).Result;
-            var sections = await new HtmlSectionParser()
+            var tocStream = Mobi7Parser.GetNavigationStream(mobi.GetRawMlStream()).Result;
+            var sections = await HtmlSectionParser
                 .Parse(tocStream)
                 .ToListAsync();
 
             var rawMlStream = mobi.GetRawMlStream();
-            var (annotations, createdDate, modifiedDate) = await new HtmlContextParser().AddContext(
+            var (annotations, createdDate, modifiedDate) = await HtmlContextParser.AddContext(
                 rawMlStream,
                 sections,
                 externalAnnotations);

@@ -11,19 +11,14 @@ namespace Noted.Extensions.Writers
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
 
-    public class MarkdownWriter : IDocumentWriter
+    public class MarkdownWriter(ILogger logger) : IDocumentWriter
     {
-        private readonly ILogger logger;
-
-        public MarkdownWriter(ILogger logger)
-        {
-            this.logger = logger;
-        }
+        private readonly ILogger logger = logger;
 
         public async Task Write(Configuration configuration, Document document, Stream output)
         {
             var writer = new StreamWriter(output, Encoding.UTF8)
-                { AutoFlush = true };
+            { AutoFlush = true };
 
             await writer.WriteLineAsync("---");
             await writer.WriteLineAsync($"title: {document.Title}");

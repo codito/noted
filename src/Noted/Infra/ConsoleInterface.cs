@@ -21,9 +21,9 @@ namespace Noted.Infra
 
         public ConsoleInterface()
         {
-            this.arguments = Array.Empty<string>();
+            this.arguments = [];
             this.configurationProvider = new ConfigurationProvider();
-            this.workflowFactory = new Dictionary<string, Func<Configuration, IWorkflow>>();
+            this.workflowFactory = [];
         }
 
         public ConsoleInterface WithArguments(string[] args)

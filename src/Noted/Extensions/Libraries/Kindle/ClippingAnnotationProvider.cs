@@ -10,19 +10,13 @@ namespace Noted.Extensions.Libraries.Kindle
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
 
-    public class ClippingAnnotationProvider : IAnnotationProvider
+    public class ClippingAnnotationProvider(
+        IFileSystem fileSystem,
+        ILogger logger) : IAnnotationProvider
     {
         private const string ClippingsFile = "My Clippings.txt";
-        private readonly IFileSystem fileSystem;
-        private readonly ILogger logger;
-
-        public ClippingAnnotationProvider(
-            IFileSystem fileSystem,
-            ILogger logger)
-        {
-            this.fileSystem = fileSystem;
-            this.logger = logger;
-        }
+        private readonly IFileSystem fileSystem = fileSystem;
+        private readonly ILogger logger = logger;
 
         public bool IsAvailable(string sourcePath)
         {

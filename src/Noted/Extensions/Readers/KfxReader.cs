@@ -14,14 +14,9 @@ namespace Noted.Extensions.Readers
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
 
-    public class KfxReader : IDocumentReader
+    public class KfxReader(ILogger logger) : IDocumentReader
     {
-        private readonly ILogger logger;
-
-        public KfxReader(ILogger logger)
-        {
-            this.logger = logger;
-        }
+        private readonly ILogger logger = logger;
 
         public List<string> SupportedExtensions => new() { "kfx" };
 

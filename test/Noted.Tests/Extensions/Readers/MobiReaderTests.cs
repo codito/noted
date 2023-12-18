@@ -16,6 +16,7 @@ namespace Noted.Tests.Extensions.Readers
     [TestClass]
     public class MobiReaderTests
     {
+        private static readonly string[] EXPECTED = new[] { "mobi" };
         private readonly MobiReader reader;
 
         public MobiReaderTests()
@@ -26,7 +27,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public void MobiReaderShouldSupportMobiFileExtensions()
         {
-            CollectionAssert.AreEquivalent(new[] { "mobi" }, this.reader.SupportedExtensions);
+            CollectionAssert.AreEquivalent(EXPECTED, this.reader.SupportedExtensions);
         }
 
         [TestMethod]

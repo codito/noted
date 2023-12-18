@@ -15,14 +15,9 @@ namespace Noted.Extensions.Readers
     using Noted.Core.Platform.IO;
     using VersOne.Epub;
 
-    public class EpubReader : IDocumentReader
+    public class EpubReader(ILogger logger) : IDocumentReader
     {
-        private readonly ILogger logger;
-
-        public EpubReader(ILogger logger)
-        {
-            this.logger = logger;
-        }
+        private readonly ILogger logger = logger;
 
         public List<string> SupportedExtensions => new() { "epub" };
 

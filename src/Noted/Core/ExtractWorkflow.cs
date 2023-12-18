@@ -16,16 +16,10 @@ namespace Noted.Core
     /// Workflow to extract annotations from files or directory (batch mode) and
     /// write them as markdown documents.
     /// </summary>
-    public class ExtractWorkflow : ExtractWorkflowEvents, IWorkflow
+    public class ExtractWorkflow(IFileSystem fileSystem, ILogger logger) : ExtractWorkflowEvents, IWorkflow
     {
-        private readonly IFileSystem fileSystem;
-        private readonly ILogger logger;
-
-        public ExtractWorkflow(IFileSystem fileSystem, ILogger logger)
-        {
-            this.fileSystem = fileSystem;
-            this.logger = logger;
-        }
+        private readonly IFileSystem fileSystem = fileSystem;
+        private readonly ILogger logger = logger;
 
         // Configurations
         //  - Input: Single file or Directory (batch mode)
@@ -90,7 +84,7 @@ namespace Noted.Core
                     {
                         if (externalAnnotations.TryGetValue(docRef, out var annotations))
                         {
-                            return annotations.ToList();
+                            return [.. annotations];
                         }
 
                         var key = externalAnnotations.Keys
@@ -99,10 +93,10 @@ namespace Noted.Core
                         if (key == null)
                         {
                             this.logger.Debug("No external annotations are found.");
-                            return new List<Annotation>();
+                            return [];
                         }
 
-                        return externalAnnotations[key].ToList();
+                        return [.. externalAnnotations[key]];
                     });
 
                 document.Source = file;

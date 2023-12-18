@@ -11,7 +11,7 @@ namespace Noted.Tests.Infra
     public class ConsoleInterfaceTests
     {
         // [TestMethod]
-        public async Task RunShouldTriggerExtractWorkflowWithConfiguration()
+        public static async Task RunShouldTriggerExtractWorkflowWithConfiguration()
         {
             var cui = new ConsoleInterface();
 

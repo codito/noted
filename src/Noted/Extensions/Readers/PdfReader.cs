@@ -23,19 +23,17 @@ namespace Noted.Extensions.Readers
     using Annotation = Noted.Core.Models.Annotation;
     using AnnotationType = UglyToad.PdfPig.Annotations.AnnotationType;
 
-    public class PdfReader : IDocumentReader
+    /// <summary>
+    /// PDF Document reader.
+    /// </summary>
+    /// <param name="logger">Logger instance.</param>
+    public partial class PdfReader(ILogger logger) : IDocumentReader
     {
         private static readonly Regex HyphenWordBreak =
-            new("\\w\\-$", RegexOptions.Compiled);
+            MyRegex();
 
-        private ILogger logger;
-        private IWordExtractor wordExtractor;
-
-        public PdfReader(ILogger logger)
-        {
-            this.logger = logger;
-            this.wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
-        }
+        private readonly ILogger logger = logger;
+        private readonly IWordExtractor wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
 
         public List<string> SupportedExtensions => new() { "pdf" };
 
@@ -44,10 +42,7 @@ namespace Noted.Extensions.Readers
             ReaderOptions options,
             Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!stream.CanRead)
             {
@@ -207,5 +202,8 @@ namespace Noted.Extensions.Readers
         {
             return HyphenWordBreak.IsMatch(word) ? word.TrimEnd('-') : $"{word} ";
         }
+
+        [GeneratedRegex("\\w\\-$", RegexOptions.Compiled)]
+        private static partial Regex MyRegex();
     }
 }

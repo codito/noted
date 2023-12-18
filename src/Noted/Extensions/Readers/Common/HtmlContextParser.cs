@@ -17,7 +17,7 @@ namespace Noted.Extensions.Readers.Common
 
     public class HtmlContextParser
     {
-        public async Task<(List<Annotation> Annotations, DateTime CreatedDate, DateTime ModifiedDate)> AddContext(
+        public static async Task<(List<Annotation> Annotations, DateTime CreatedDate, DateTime ModifiedDate)> AddContext(
             Stream stream,
             List<DocumentSection> sections,
             IEnumerable<(LineLocation Location, Annotation Annotation)> externalAnnotations)

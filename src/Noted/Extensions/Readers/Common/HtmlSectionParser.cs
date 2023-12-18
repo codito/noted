@@ -12,7 +12,7 @@ namespace Noted.Extensions.Readers.Common
 
     public class HtmlSectionParser
     {
-        public async IAsyncEnumerable<DocumentSection> Parse(Stream stream)
+        public static async IAsyncEnumerable<DocumentSection> Parse(Stream stream)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);

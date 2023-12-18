@@ -14,6 +14,9 @@
 
     <!-- Copyright headers check is skipped (see https://github.com/dotnet/sdk/issues/989). -->
     <Rule Id="SA1636" Action="None" />
+    
+    <!-- https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3503 and similar -->
+    <Rule Id="SA1010" Action="None" />
   </Rules>
 </RuleSet>
 

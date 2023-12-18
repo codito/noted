@@ -5,11 +5,7 @@ namespace Noted.Extensions.Libraries.Kindle
 {
     using System;
 
-    public class InvalidClippingException : Exception
+    public class InvalidClippingException(string error, string? line, Exception innerException = null!) : Exception($"{error}. Encountered above error while parsing '{line}'.", innerException)
     {
-        public InvalidClippingException(string error, string? line, Exception innerException = null!)
-            : base($"{error}. Encountered above error while parsing '{line}'.", innerException)
-        {
-        }
     }
 }

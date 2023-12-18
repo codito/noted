@@ -33,7 +33,7 @@ namespace Noted.Core.Models
 
         public override bool Equals(object? other)
         {
-            if (!(other is DocumentReference right))
+            if (other is not DocumentReference right)
             {
                 return false;
             }
@@ -59,8 +59,8 @@ namespace Noted.Core.Models
             // Use stringent matching for titles since mostly the titles may
             // include subtitles, thus one will be substring of another
             var titleMatch = this.Title.Length < other.Title.Length
-                ? other.Title.ToLower().Contains(this.Title.ToLower())
-                : this.Title.ToLower().Contains(other.Title.ToLower());
+                ? other.Title.Contains(this.Title, StringComparison.CurrentCultureIgnoreCase)
+                : this.Title.Contains(other.Title, StringComparison.CurrentCultureIgnoreCase);
 
             // Approximate match authors since the names may be in different order
             // firstname lastname vs lastname, firstname or Dr firstname lastname

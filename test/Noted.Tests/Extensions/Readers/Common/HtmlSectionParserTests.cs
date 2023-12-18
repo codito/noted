@@ -66,7 +66,7 @@ namespace Noted.Tests.Extensions.Readers.Common
         public async Task ParseShouldReturnTableOfContentWithDepth()
         {
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(TocFragment));
-            var toc = await this.parser.Parse(stream).ToListAsync();
+            var toc = await HtmlSectionParser.Parse(stream).ToListAsync();
 
             Assert.AreEqual(9, toc.Count);
             Assert.AreEqual("Preface", toc[0].Title);
