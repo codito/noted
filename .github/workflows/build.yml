@@ -12,13 +12,14 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       NUGET_XMLDOC_MODE: skip
+      HUSKY: 0
     steps:
       - name: Checkout
         uses: actions/checkout@v3.5.3
-      - name: Install .NET (v6.0)
+      - name: Install .NET (v8.0)
         uses: actions/setup-dotnet@v3.2.0
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
       - name: Test
         run: |
           dotnet test --configuration Debug
@@ -39,12 +40,13 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       NUGET_XMLDOC_MODE: skip
+      HUSKY: 0
     steps:
       - uses: actions/checkout@v3
-      - name: Install .NET (v6.0)
+      - name: Install .NET (v8.0)
         uses: actions/setup-dotnet@v3.2.0
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
       - name: Extract version
         id: extract_version
         run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
