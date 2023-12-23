@@ -29,7 +29,7 @@ namespace Noted.Tests.Extensions.Readers
 
         private static readonly string[] EXPECTED = ["pdf"];
         private readonly PdfReader reader;
-        private readonly List<Annotation> emptyExternalAnnotations = new List<Annotation>();
+        private readonly List<Annotation> emptyExternalAnnotations = [];
 
         public PdfReaderTests()
         {
