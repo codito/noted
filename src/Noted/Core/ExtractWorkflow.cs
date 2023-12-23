@@ -74,7 +74,9 @@ namespace Noted.Core
                     continue;
                 }
 
-                // TODO extract file scoped external annotations (KOReader)
+                // Extract if the document has _external_ annotations (kindle, koreader) or
+                // can have _embedded_ annotations (like pdf).
+                // FIXME
                 this.Raise(new ExtractionStartedEventArgs { FileName = file });
                 await using var stream = this.fileSystem.OpenPathForRead(file);
                 var document = await reader.Read(

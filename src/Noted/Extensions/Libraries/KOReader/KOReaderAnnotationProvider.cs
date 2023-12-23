@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using NLua;
 using Noted.Core.Extensions;
 using Noted.Core.Models;
@@ -34,8 +35,14 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
         foreach (var annotation in annotationFiles)
         {
             using var lua = new Lua();
+            lua.State.Encoding = Encoding.UTF8;
             var annotationTable = GetLuaTable(lua, lua.DoFile(annotation)[0]);
-            var bookmarksTable = GetLuaTable(lua, annotationTable["bookmarks"]);
+            if (!annotationTable.TryGetValue("bookmarks", out var bookmarkNode) || bookmarkNode == null)
+            {
+                continue;
+            }
+
+            var bookmarksTable = GetLuaTable(lua, bookmarkNode);
             var highlightTable = GetLuaTable(lua, annotationTable["highlight"]);
             var highlights = highlightTable.Values
                 .SelectMany(h => GetLuaTable(lua, h).Values)
@@ -66,9 +73,10 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
                 var pos0 = bookmarkDict["pos0"].ToString();
                 var pos1 = bookmarkDict["pos1"].ToString();
                 bookmarkDict.TryGetValue("chapter", out var chapterTitle);
+                var epubXPath = new EpubXPathLocation(pos0!, pos1!);
                 var context = new AnnotationContext()
                 {
-                    SerializedLocation = new EpubXPathLocation(pos0!, pos1!).ToString(),
+                    SerializedLocation = epubXPath.ToString(),
                     DocumentSection = new DocumentSection(chapterTitle?.ToString() ?? string.Empty, 0, 0, null)
                 };
                 yield return new Annotation(

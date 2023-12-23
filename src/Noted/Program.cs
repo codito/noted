@@ -5,6 +5,7 @@ namespace Noted
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Noted.Core;
     using Noted.Core.Extensions;
@@ -39,11 +40,28 @@ namespace Noted
             var workflows = new Dictionary<string, Func<Configuration, IWorkflow>>
                 { { "extract", config => new ExtractWorkflow(config.FileSystem, config.Logger) } };
 
+            WaitForDebuggerIfEnabled();
+
             return await new ConsoleInterface()
                 .WithArguments(args)
                 .WithConfigurationProvider(configurationProvider)
                 .WithWorkflows(workflows)
                 .RunAsync();
+        }
+
+        private static void WaitForDebuggerIfEnabled()
+        {
+            var debugEnv = Environment.GetEnvironmentVariable("NOTED_DEBUG");
+            if (string.IsNullOrEmpty(debugEnv))
+            {
+                return;
+            }
+
+            System.Console.WriteLine($"Please attach debugger to pid: {Environment.ProcessId}");
+            while (!Debugger.IsAttached)
+            {
+                Debugger.Break();
+            }
         }
     }
 }

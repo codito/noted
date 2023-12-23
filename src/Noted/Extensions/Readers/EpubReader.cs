@@ -4,6 +4,7 @@
 namespace Noted.Extensions.Readers
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -11,6 +12,7 @@ namespace Noted.Extensions.Readers
     using AngleSharp.Dom;
     using AngleSharp.Html.Parser;
     using AngleSharp.XPath;
+    using MiscUtil.Xml.Linq.Extensions;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
@@ -42,16 +44,22 @@ namespace Noted.Extensions.Readers
                     Annotation: a))
                 .OrderBy(p => p.Location.Start.DocumentFragmentId)
                 .ToList();
+            if (externalAnnotations.Count == 0)
+            {
+                return new Document { Title = docRef.Title, Author = docRef.Author };
+            }
+
             var sections = ParseNavigation(epub);
             var content = new Dictionary<int, string>();
             var parser = new HtmlParser(new HtmlParserOptions
             {
                 IsKeepingSourceReferences = true
             });
+            var annotationIndex = 0;
             foreach (var annotationTuple in externalAnnotations)
             {
-                var docIndex = annotationTuple.Location.Start.DocumentFragmentId;
-                var document = await parser.ParseDocumentAsync(epub.ReadingOrder[docIndex - 1].Content);
+                var docIndex = annotationTuple.Location.Start.DocumentFragmentId - 1;
+                var document = await parser.ParseDocumentAsync(epub.ReadingOrder[docIndex].Content);
 
                 var annotation = annotationTuple.Annotation;
                 var allNodesInDocument = document.Body.SelectNodes("//*");
@@ -59,10 +67,13 @@ namespace Noted.Extensions.Readers
                 var endNode = document.Body.SelectSingleNode($"/{annotationTuple.Location.End.XPath}");
 
                 var context = GetContext(allNodesInDocument, startNode, endNode);
-                annotation.Context.DocumentSection = sections[annotation.Context.DocumentSection!.Title];
-                annotation.Context.Location = ((docIndex - 1) * 1000) + context.Item1;
+                annotation.Context.DocumentSection = GetSectionForAnnotation(epub, sections, docIndex, annotation.Context.DocumentSection!.Title, startNode);
+                annotation.Context.Location = ((docIndex - 1) * 1000) +
+                    context.Item1 == -1 ? annotationIndex : context.Item1;
                 annotation.Context.Content = context.Item2;
                 annotations.Add(annotation);
+
+                annotationIndex++;
             }
 
             var sortedSections = sections.Values.OrderBy(s => s.Location).ToList();
@@ -77,8 +88,13 @@ namespace Noted.Extensions.Readers
 
         private static Tuple<int, string> GetContext(List<INode> allNodes, INode start, INode end)
         {
-            var startSelector = start.ParentElement!.GetSelector();
-            var endSelector = end.ParentElement!.GetSelector();
+            var startSelector = start?.ParentElement?.GetSelector();
+            var endSelector = end?.ParentElement?.GetSelector();
+            if (startSelector == null || endSelector == null)
+            {
+                return new(-1, string.Empty);
+            }
+
             var nodesBetween = new List<string>();
             var startLocation = 0;
 
@@ -111,6 +127,37 @@ namespace Noted.Extensions.Readers
             return new(startLocation, string.Join(Environment.NewLine, nodesBetween));
         }
 
+        private static DocumentSection GetSectionForAnnotation(EpubBook epub, Dictionary<string, DocumentSection> sections, int docFragmentId, string title, INode startPath)
+        {
+            // Strategy 1: locate the section by title
+            // For older epub documents which don't have well formatted toc navigation.
+            if (startPath == null)
+            {
+                return sections.Where(s => s.Key.Contains(title)).FirstOrDefault().Value;
+            }
+
+            // Strategy 2: locate the section by anchor from nav element
+            // For epub 3 etc. with well formatted nav.
+            foreach (var anc in startPath.GetAncestors())
+            {
+                var sectionAnchor = (anc as IElement)?.Id ?? string.Empty;
+                var key = $"{epub.ReadingOrder[docFragmentId].FilePath}-{sectionAnchor}-{title ?? string.Empty}";
+
+                if (sections.TryGetValue(key, out var section))
+                {
+                    return section;
+                }
+            }
+
+            // Strategy 3: fallback to title match.
+            if (!string.IsNullOrEmpty(title))
+            {
+                return sections.Where(s => s.Key.Contains(title)).FirstOrDefault().Value;
+            }
+
+            return null!;
+        }
+
         private static void NavigationDfs(
             EpubNavigationItem root,
             Dictionary<string, DocumentSection> result,
@@ -118,11 +165,20 @@ namespace Noted.Extensions.Readers
             int level,
             ref int index)
         {
-            var rootSection = new DocumentSection(root.Title, level, ++index * 1000, parent);
-            result.Add(root.Title, rootSection);
+            // Skip adding HEADER type nodes as toc
+            var rootSection = root.Type == EpubNavigationItemType.HEADER ? null
+                : new DocumentSection(root.Title, level, ++index * 1000, parent);
+            if (rootSection != null)
+            {
+                // Using an unique combination because the docFragmentId and title can be unique
+                // in a specific book. Just title may not be unique.
+                // For example: text/foo.xhtml-II
+                result.Add($"{root.Link?.ContentFilePath ?? string.Empty}-{root.Link?.Anchor ?? string.Empty}-{root.Title}", rootSection);
+            }
+
             foreach (var nestedItem in root.NestedItems)
             {
-                NavigationDfs(nestedItem, result, rootSection, level + 1, ref index);
+                NavigationDfs(nestedItem, result, rootSection!, level + 1, ref index);
             }
         }
 

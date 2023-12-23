@@ -3,15 +3,16 @@
 **TL;DR** noted is a command line app to liberate your highlights and notes.
 
 Noted extracts annotations embedded into documents (pdf), or collects them from
-readers (kindle). It tries to align them with the chapters and context to
+readers (kindle, or koreader). It tries to align them with the chapters and context to
 produce a plain text markdown file.
 
 ## Features
 
 **✓** Extracts annotations (highlights and notes) for documents and books  
 **✓** Extracts _context_ and _chapter headings_ along with the annotations  
-**✓** Supports `pdf` and `mobi` files  
+**✓** Supports `pdf`, `epub` and `mobi` files  
 **✓** Detects kindle `My Clippings.txt` files  
+**✓** Detects koreader `*.sdr` directories  
 **✓** Saves all the extracted information in markdown text
 
 ## Installation
@@ -85,7 +86,7 @@ Completed in 1.71s.
 ## Roadmap
 
 - Support for `kfx` and `azw3` files in kindle
-- Support for additional readers like `koreader`, `kobo` etc.
+- Support for additional readers like `kobo` etc.
 
 Contributions in any form e.g. bug reports, feature requests or PRs are most
 welcome!
