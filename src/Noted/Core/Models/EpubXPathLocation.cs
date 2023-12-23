@@ -6,7 +6,7 @@ namespace Noted.Core.Models;
 using System;
 using System.Text.RegularExpressions;
 
-public struct EpubXPathLocation(string pos0, string pos1) : IComparable
+public readonly struct EpubXPathLocation(string pos0, string pos1) : IComparable
 {
     public EpubLocation Start { get; init; } = EpubLocation.FromString(pos0);
 
@@ -18,9 +18,9 @@ public struct EpubXPathLocation(string pos0, string pos1) : IComparable
         return new EpubXPathLocation(range[0], range[1]);
     }
 
-    public override string ToString() => $"epubxpath://{this.Start}-{this.End}";
+    public override readonly string ToString() => $"epubxpath://{this.Start}-{this.End}";
 
-    public int CompareTo(object? obj)
+    public readonly int CompareTo(object? obj)
     {
         if (obj is not EpubXPathLocation other)
         {
