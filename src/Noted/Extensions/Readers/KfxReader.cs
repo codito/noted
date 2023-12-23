@@ -19,10 +19,15 @@ namespace Noted.Extensions.Readers
 
         public List<string> SupportedExtensions => new() { "kfx" };
 
+        public Task<DocumentReference> GetMetadata(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Document> Read(
             Stream stream,
             ReaderOptions options,
-            Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
+            List<Annotation> annotations)
         {
             var kfx = new KfxContainer(stream);
             var docRef = new DocumentReference
@@ -32,7 +37,7 @@ namespace Noted.Extensions.Readers
             };
 
             Console.WriteLine($"Book: {docRef.Title}");
-            var externalAnnotations = fetchExternalAnnotations(docRef)
+            var externalAnnotations = annotations
                 .Select(a => (
                     Location: LineLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))

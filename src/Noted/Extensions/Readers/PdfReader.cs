@@ -34,10 +34,23 @@ namespace Noted.Extensions.Readers
 
         public List<string> SupportedExtensions => new() { "pdf" };
 
+        public Task<DocumentReference> GetMetadata(Stream stream)
+        {
+            var doc = PdfDocument.Open(stream);
+            var docReference = new DocumentReference
+            {
+                Title = doc.Information.Title,
+                Author = doc.Information.Author,
+                SupportsEmbeddedAnnotation = true
+            };
+
+            return Task.FromResult(docReference);
+        }
+
         public Task<Document> Read(
             Stream stream,
             ReaderOptions options,
-            Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
+            List<Annotation> annotations)
         {
             ArgumentNullException.ThrowIfNull(stream);
 
@@ -54,7 +67,6 @@ namespace Noted.Extensions.Readers
             };
 
             // TODO add support for external annotations in pdf
-            var annotations = new List<Annotation>();
             foreach (var page in doc.GetPages())
             {
                 var letters = page.Letters;

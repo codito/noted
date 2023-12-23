@@ -27,7 +27,7 @@ public class EpubReaderTests
     {
         using var stream = AssetFactory.GetAsset(AssetFactory.GetKOReaderLibrary(), "the_prophet.epub");
 
-        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), (_) => []);
+        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), []);
 
         Assert.AreEqual(0, document.Annotations.Count());
         Assert.AreEqual(0, document.Sections.Count());
@@ -50,7 +50,7 @@ public class EpubReaderTests
             },
             new DateTime(2023, 12, 23));
 
-        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), (_) => [annotation]);
+        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), [annotation]);
 
         var annotations = document.Annotations.ToList();
         Assert.AreEqual(1, annotations.Count);
@@ -75,7 +75,7 @@ public class EpubReaderTests
             },
             new DateTime(2023, 12, 23));
 
-        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), (_) => [annotation]);
+        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), [annotation]);
 
         var annotations = document.Annotations.ToList();
         Assert.AreEqual(1, annotations.Count);

@@ -15,6 +15,16 @@ namespace Noted.Core.Models
 
         public string Author { get; init; } = null!;
 
+        /// <summary>
+        /// Gets a value indicating whether the document supports embedded annotations. E.g., pdf files.
+        /// </summary>
+        public bool SupportsEmbeddedAnnotation { get; init; } = false;
+
+        /// <summary>
+        /// Gets or sets the fully qualified path to the document if available.
+        /// </summary>
+        public string Path { get; set; } = string.Empty;
+
         private SortedSet<string> AuthorVector
         {
             get

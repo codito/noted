@@ -51,7 +51,7 @@ namespace Noted.Tests.Extensions.Readers
             var document = await this.reader.Read(
                 stream,
                 new ReaderOptions(),
-                _ => annotations);
+                annotations);
 
             Assert.AreEqual(1, document.Annotations.Count());
         }

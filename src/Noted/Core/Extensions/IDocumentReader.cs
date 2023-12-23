@@ -26,8 +26,15 @@ namespace Noted.Core.Extensions
         /// </summary>
         /// <param name="stream">Document stream.</param>
         /// <param name="options">Options for the reader.</param>
-        /// <param name="fetchExternalAnnotations">Function to fetch external annotations for a Document.</param>
+        /// <param name="annotations">Function to fetch external annotations for a Document.</param>
         /// <returns>Document with metadata and annotations.</returns>
-        Task<Document> Read(Stream stream, ReaderOptions options, Func<DocumentReference, List<Annotation>> fetchExternalAnnotations);
+        Task<Document> Read(Stream stream, ReaderOptions options, List<Annotation> annotations);
+
+        /// <summary>
+        /// Gets the document metadata for a stream.
+        /// </summary>
+        /// <param name="stream">Document stream.</param>
+        /// <returns>Document reference.</returns>
+        Task<DocumentReference> GetMetadata(Stream stream);
     }
 }

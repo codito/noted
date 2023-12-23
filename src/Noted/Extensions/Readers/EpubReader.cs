@@ -25,10 +25,22 @@ namespace Noted.Extensions.Readers
 
         public List<string> SupportedExtensions => new() { "epub" };
 
+        public async Task<DocumentReference> GetMetadata(Stream stream)
+        {
+            var epub = await VersOne.Epub.EpubReader.ReadBookAsync(stream);
+            var docRef = new DocumentReference
+            {
+                Title = epub.Title,
+                Author = epub.Author,
+            };
+
+            return docRef;
+        }
+
         public async Task<Document> Read(
             Stream stream,
             ReaderOptions options,
-            Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
+            List<Annotation> annotations)
         {
             var epub = await VersOne.Epub.EpubReader.ReadBookAsync(stream);
             var docRef = new DocumentReference
@@ -36,9 +48,8 @@ namespace Noted.Extensions.Readers
                 Title = epub.Title,
                 Author = epub.Author
             };
-            var annotations = new List<Annotation>();
 
-            var externalAnnotations = fetchExternalAnnotations(docRef)
+            var externalAnnotations = annotations
                 .Select(a => (
                     Location: EpubXPathLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))

@@ -22,10 +22,7 @@ namespace Noted.Extensions.Readers
         // TODO add support for azw3
         public List<string> SupportedExtensions => new() { "mobi" };
 
-        public async Task<Document> Read(
-            Stream stream,
-            ReaderOptions options,
-            Func<DocumentReference, List<Annotation>> fetchExternalAnnotations)
+        public Task<DocumentReference> GetMetadata(Stream stream)
         {
             var mobi = new MobiMetadata(stream);
             var docRef = new DocumentReference
@@ -34,7 +31,22 @@ namespace Noted.Extensions.Readers
                 Author = mobi.Author
             };
 
-            var externalAnnotations = fetchExternalAnnotations(docRef)
+            return Task.FromResult(docRef);
+        }
+
+        public async Task<Document> Read(
+            Stream stream,
+            ReaderOptions options,
+            List<Annotation> annotations)
+        {
+            var mobi = new MobiMetadata(stream);
+            var docRef = new DocumentReference
+            {
+                Title = mobi.Title,
+                Author = mobi.Author
+            };
+
+            var externalAnnotations = annotations
                 .Select(a => (
                     Location: LineLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))
@@ -56,7 +68,7 @@ namespace Noted.Extensions.Readers
                 .ToListAsync();
 
             var rawMlStream = mobi.GetRawMlStream();
-            var (annotations, createdDate, modifiedDate) = await HtmlContextParser.AddContext(
+            var (updatedAnnotations, createdDate, modifiedDate) = await HtmlContextParser.AddContext(
                 rawMlStream,
                 sections,
                 externalAnnotations);
@@ -67,7 +79,7 @@ namespace Noted.Extensions.Readers
                 Author = docRef.Author,
                 CreatedDate = createdDate,
                 ModifiedDate = modifiedDate,
-                Annotations = annotations,
+                Annotations = updatedAnnotations,
                 Sections = sections
             };
         }

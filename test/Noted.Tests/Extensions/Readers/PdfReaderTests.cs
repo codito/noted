@@ -29,13 +29,11 @@ namespace Noted.Tests.Extensions.Readers
 
         private static readonly string[] EXPECTED = ["pdf"];
         private readonly PdfReader reader;
-        private readonly Func<DocumentReference, List<Annotation>> emptyExternalAnnotations;
+        private readonly List<Annotation> emptyExternalAnnotations = new List<Annotation>();
 
         public PdfReaderTests()
         {
             this.reader = new PdfReader(new NullLogger());
-            this.emptyExternalAnnotations =
-                _ => new List<Annotation>();
         }
 
         [TestMethod]
