@@ -25,8 +25,8 @@ namespace Noted.Tests.Extensions.Readers.Common
 
         private static readonly List<DocumentSection> SampleSections =
         [
-            new("Ch1", 1, 0),
-            new("Ch2", 1, 141)
+            new("Ch1", 1, 0, null),
+            new("Ch2", 1, 141, null)
         ];
 
         private readonly Stream sampleContentStream;

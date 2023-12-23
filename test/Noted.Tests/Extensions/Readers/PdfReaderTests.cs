@@ -81,7 +81,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public async Task ReadShouldParseSingleColumnLayoutDocument()
         {
-            await using var fs = new FileStream("single column.pdf", FileMode.Open);
+            await using var fs = AssetFactory.GetAsset("pdf", "single column.pdf");
 
             var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 
@@ -99,7 +99,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public async Task ReadShouldParseTwoColumnLayoutDocument()
         {
-            await using var fs = new FileStream("two column.pdf", FileMode.Open);
+            await using var fs = AssetFactory.GetAsset("pdf", "two column.pdf");
 
             var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 

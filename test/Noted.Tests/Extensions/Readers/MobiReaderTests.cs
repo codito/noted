@@ -33,7 +33,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public async Task MobiReaderShouldParseAnnotationsAndTableOfContent()
         {
-            await using var stream = AssetFactory.GetAsset("pg42324.mobi");
+            await using var stream = AssetFactory.GetAsset("kindle", "pg42324.mobi");
             var annotations = new List<Annotation>
             {
                 new(

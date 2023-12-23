@@ -7,9 +7,32 @@ namespace Noted.Tests
 
     public class AssetFactory
     {
-        public static Stream GetAsset(string fileName)
+        public static readonly string TestDataDir = Path.Join(Path.GetTempPath(), "notedtests");
+
+        static AssetFactory()
         {
-            return File.OpenRead(fileName);
+            EnsureDirectory(TestDataDir);
+        }
+
+        public static Stream GetAsset(params string[] fileNameParts)
+        {
+            return File.OpenRead(Path.Join(fileNameParts));
+        }
+
+        public static string GetKindleLibrary() => Path.Join(".", "kindle");
+
+        public static string GetKOReaderLibrary() => Path.Join(".", "koreader");
+
+        public static string GetPdfLibrary() => Path.Join(".", "pdf");
+
+        public static void EnsureDirectory(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+
+            Directory.CreateDirectory(path);
         }
     }
 }

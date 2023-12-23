@@ -14,7 +14,7 @@ namespace Noted
     using Noted.Extensions.Writers;
     using Noted.Infra;
 
-    internal static class Program
+    public static class Program
     {
         public static async Task<int> Main(string[] args)
         {
@@ -22,12 +22,12 @@ namespace Noted
                 .WithAnnotationProviders(config => new List<IAnnotationProvider>
                 {
                     new ClippingAnnotationProvider(config.FileSystem, config.Logger),
-                    new KOReaderAnnotationProvider()
+                    new KOReaderAnnotationProvider(config.FileSystem, config.Logger)
                 })
                 .WithReaders(config => new List<IDocumentReader>
                 {
-                    // new EpubReader(config.Logger),
                     // new KfxReader(config.Logger),
+                    new EpubReader(config.Logger),
                     new PdfReader(config.Logger),
                     new MobiReader(config.Logger)
                 })

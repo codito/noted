@@ -3,7 +3,6 @@
 
 namespace Noted.Extensions.Libraries.Kindle
 {
-    using Noted.Core;
     using Noted.Core.Models;
 
     public static class ClippingExtensions

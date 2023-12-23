@@ -10,5 +10,6 @@ namespace Noted.Core.Models
     public record DocumentSection(
         string Title,
         int Level,
-        int Location);
+        int Location,
+        DocumentSection? Parent);
 }

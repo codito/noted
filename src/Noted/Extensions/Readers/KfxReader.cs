@@ -9,7 +9,6 @@ namespace Noted.Extensions.Readers
     using System.Linq;
     using System.Threading.Tasks;
     using Ephemerality.Unpack.KFX;
-    using Noted.Core;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;

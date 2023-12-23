@@ -52,6 +52,7 @@ namespace Noted.Extensions.Readers
             var tocStream = Mobi7Parser.GetNavigationStream(mobi.GetRawMlStream()).Result;
             var sections = await HtmlSectionParser
                 .Parse(tocStream)
+                .OrderBy(s => s.Location)
                 .ToListAsync();
 
             var rawMlStream = mobi.GetRawMlStream();

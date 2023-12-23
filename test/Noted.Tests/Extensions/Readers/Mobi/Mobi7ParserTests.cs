@@ -14,7 +14,7 @@ namespace Noted.Tests.Extensions.Readers.Mobi
         [TestMethod]
         public async Task Mobi7ParserShouldExtractNavigationStream()
         {
-            await using var stream = AssetFactory.GetAsset("pg42324.mobi");
+            await using var stream = AssetFactory.GetAsset("kindle", "pg42324.mobi");
             await using var rawMlStream = new MobiMetadata(stream).GetRawMlStream();
 
             var parser = new Mobi7Parser();

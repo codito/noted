@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: Noted",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/src/Noted/Noted.csproj",
+            "launchConfigurationId": "TargetFramework=;Noted"
+        },
+        {
+            "name": "C#: Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dotnet: build",
+            "program": "${workspaceFolder}/src/Noted/bin/Debug/net8.0/Noted.dll",
+            "args": ["test/assets/koreader", "/tmp"]
+        },
+    ]
+}

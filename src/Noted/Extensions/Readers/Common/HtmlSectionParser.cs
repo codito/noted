@@ -5,6 +5,7 @@ namespace Noted.Extensions.Readers.Common
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using AngleSharp;
     using AngleSharp.Dom;
     using AngleSharp.Html.Dom;
@@ -27,18 +28,11 @@ namespace Noted.Extensions.Readers.Common
             // Note that both parent and child levels share a common root. Our
             // level calculation leverages this.
             var depth = 0;
-            foreach (var node in document.All)
+            var prevLevel = 0;
+            DocumentSection prevSection = null!;
+            foreach (var node in document.QuerySelectorAll("a"))
             {
-                // AngleSharp always inserts the provided fragment within a
-                // body element. We reset the depth accordingly.
-                // Alternatively, we could do node.GetAncestors().Count but that
-                // revisits the parent nodes multiple times.
-                depth = node.Parent == document.Body ? 0 : depth + 1;
-                if (node is not IHtmlAnchorElement)
-                {
-                    continue;
-                }
-
+                depth = node.GetAncestors().Count();
                 var fileOffset = node.GetAttribute("filepos");
                 if (!levelSet.TryGetValue(depth, out var level))
                 {
@@ -46,10 +40,26 @@ namespace Noted.Extensions.Readers.Common
                     levelSet[depth] = level;
                 }
 
-                yield return new DocumentSection(
+                var parent = level == 1 ? null : prevSection;  // assume this node is a child
+                var count = prevLevel - level;
+                while (prevLevel >= level)
+                {
+                    // if this node is a sibling instead
+                    parent = prevSection?.Parent;
+                    prevSection = parent ?? null!;
+                    prevLevel--;
+                }
+
+                var section = new DocumentSection(
                     node.Text(),
                     level,
-                    string.IsNullOrEmpty(fileOffset) ? 0 : int.Parse(fileOffset));
+                    string.IsNullOrEmpty(fileOffset) ? 0 : int.Parse(fileOffset),
+                    parent);
+
+                yield return section;
+
+                prevLevel = level;
+                prevSection = section;
             }
         }
     }

@@ -3,7 +3,9 @@
 
 namespace Noted.Extensions.Writers
 {
+    using System.Collections.Generic;
     using System.IO;
+    using System.Speech.Recognition;
     using System.Text;
     using System.Threading.Tasks;
     using Noted.Core;
@@ -28,28 +30,15 @@ namespace Noted.Extensions.Writers
             await writer.WriteLineAsync("---");
             await writer.WriteLineAsync();
 
+            var sectionHeaderPrinted = new HashSet<DocumentSection>();
             var currentPage = 0;
             using var sectionIterator = document.Sections.GetEnumerator();
             foreach (var annotation in document.Annotations)
             {
                 // Print section header
-                if (configuration.ExtractDocumentSections)
+                if (annotation.Context.DocumentSection != null && configuration.ExtractDocumentSections)
                 {
-                    while (sectionIterator.MoveNext() &&
-                           sectionIterator.Current != null &&
-                           sectionIterator.Current.Location <=
-                           annotation.Context.Location)
-                    {
-                        var (title, level, location) = sectionIterator.Current;
-                        await writer.WriteLineAsync(
-                            $"{new string('#', level)} {title}");
-                        if (configuration.Verbose)
-                        {
-                            await writer.WriteLineAsync($"<!-- Location: {location} -->");
-                        }
-
-                        await writer.WriteLineAsync();
-                    }
+                    await PrintSectionHeader(configuration, writer, annotation.Context.DocumentSection, sectionHeaderPrinted);
                 }
 
                 // Print page number
@@ -78,6 +67,39 @@ namespace Noted.Extensions.Writers
                 {
                     await writer.WriteLineAsync();
                     await writer.WriteLineAsync($"Context: {annotation.Context.Content}");
+                }
+
+                await writer.WriteLineAsync();
+            }
+        }
+
+        private static async Task PrintSectionHeader(
+            Configuration configuration,
+            StreamWriter writer,
+            DocumentSection section,
+            HashSet<DocumentSection> visited)
+        {
+            var headers = new List<DocumentSection>();
+            var sectionPrint = section;
+            while (sectionPrint != null)
+            {
+                if (!visited.Contains(sectionPrint))
+                {
+                    headers.Insert(0, sectionPrint);
+                    visited.Add(sectionPrint);
+                }
+
+                sectionPrint = sectionPrint.Parent;
+            }
+
+            foreach (var header in headers)
+            {
+                var (title, level, location, _) = header;
+                await writer.WriteLineAsync(
+                    $"{new string('#', level)} {title}");
+                if (configuration.Verbose)
+                {
+                    await writer.WriteLineAsync($"<!-- Location: {location} -->");
                 }
 
                 await writer.WriteLineAsync();
