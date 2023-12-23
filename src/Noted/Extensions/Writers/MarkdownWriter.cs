@@ -5,7 +5,7 @@ namespace Noted.Extensions.Writers
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Speech.Recognition;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using Noted.Core;
@@ -31,45 +31,49 @@ namespace Noted.Extensions.Writers
             await writer.WriteLineAsync();
 
             var sectionHeaderPrinted = new HashSet<DocumentSection>();
-            var currentPage = 0;
-            using var sectionIterator = document.Sections.GetEnumerator();
-            foreach (var annotation in document.Annotations)
+            foreach (var annotationGroup in document.Annotations.GroupBy(a => a.Context.DocumentSection).OrderBy(g => g.Key?.Location))
             {
                 // Print section header
-                if (annotation.Context.DocumentSection != null && configuration.ExtractDocumentSections)
+                if (configuration.ExtractDocumentSections)
                 {
-                    await PrintSectionHeader(configuration, writer, annotation.Context.DocumentSection, sectionHeaderPrinted);
+                    await PrintSectionHeader(configuration, writer, annotationGroup.Key!, sectionHeaderPrinted);
                 }
 
-                // Print page number
-                if (currentPage < annotation.Context.PageNumber)
+                var annotations = annotationGroup.OrderBy(g => g.Context.Location);
+                var currentPage = 0;
+                foreach (var annotation in annotations)
                 {
-                    currentPage = annotation.Context.PageNumber;
-                    await writer.WriteLineAsync($"**Page {currentPage}**");
-                    if (configuration.Verbose)
+                    // Print page number
+                    if (currentPage < annotation.Context.PageNumber)
                     {
-                        var section = annotation.Context.DocumentSection;
-                        var location = annotation.Context.Location;
-                        await writer.WriteLineAsync($"<!-- Location: {location} -->");
-                        await writer.WriteLineAsync($"<!-- Section: {section?.Level} - {section?.Title} at {section?.Location} -->");
+                        currentPage = annotation.Context.PageNumber;
+                        await writer.WriteLineAsync($"**Page {currentPage}**");
+                        if (configuration.Verbose)
+                        {
+                            var section = annotation.Context.DocumentSection;
+                            var location = annotation.Context.Location;
+                            await writer.WriteLineAsync($"<!-- Location: {location} -->");
+                            await writer.WriteLineAsync($"<!-- Section: {section?.Level} - {section?.Title} at {section?.Location} -->");
+                        }
+
+                        await writer.WriteLineAsync();
                     }
 
+                    var prefix =
+                        annotation.Type.Equals(AnnotationType.Highlight)
+                            ? ">"
+                            : "Note:";
+
+                    // Ensure newlines are replaced with appropriate new line inside quoted markdown text.
+                    await writer.WriteLineAsync($"{prefix} {annotation.Content.Replace("\n", "  \n> ")}");
                     await writer.WriteLineAsync();
+
+                    if (configuration.ExtractionContextLength > 0 && !string.IsNullOrEmpty(annotation.Context.Content))
+                    {
+                        await writer.WriteLineAsync();
+                        await writer.WriteLineAsync($"Context: {annotation.Context.Content}");
+                    }
                 }
-
-                var prefix =
-                    annotation.Type.Equals(AnnotationType.Highlight)
-                        ? ">"
-                        : "Note:";
-                await writer.WriteLineAsync($"{prefix} {annotation.Content}");
-
-                if (configuration.ExtractionContextLength > 0 && !string.IsNullOrEmpty(annotation.Context.Content))
-                {
-                    await writer.WriteLineAsync();
-                    await writer.WriteLineAsync($"Context: {annotation.Context.Content}");
-                }
-
-                await writer.WriteLineAsync();
             }
         }
 

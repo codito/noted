@@ -92,7 +92,7 @@ namespace Noted.Core
                     continue;
                 }
 
-                await this.ParseAnnotationsInDocument(configuration, docRef, reader, []);
+                await this.ParseAnnotationsInDocument(configuration, docRef, reader, [.. annotationGroup]);
             }
 
             stepTimer.Stop();

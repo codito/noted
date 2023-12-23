@@ -87,8 +87,7 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
                         highlightDate);
 
                 // Notes are always attached to a highlight. We emit an extra annotation in this case.
-                bookmarkDict.TryGetValue("text", out var text);
-                if (highlights.Contains(pos0) && text != null && !text.ToString()!.StartsWith("Page "))
+                if (bookmarkDict.TryGetValue("text", out var text) && text != null && highlights.Contains(pos0) && !text.ToString()!.StartsWith("Page "))
                 {
                     yield return new Annotation(
                         text.ToString()!,
