@@ -58,6 +58,8 @@ public class EpubReaderTests
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
         Assert.AreNotEqual(0, annotations[0].Context.Location);
         Assert.AreEqual(34, document.Sections.Count());
+        Assert.AreEqual(new DateTime(2023, 12, 23), document.CreatedDate);
+        Assert.AreEqual(new DateTime(2023, 12, 23), document.ModifiedDate);
     }
 
     [TestMethod]
@@ -83,5 +85,38 @@ public class EpubReaderTests
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
         Assert.AreNotEqual(0, annotations[0].Context.Location);
         Assert.AreEqual(552, document.Sections.Count());
+        Assert.AreEqual(new DateTime(2023, 12, 23), document.CreatedDate);
+        Assert.AreEqual(new DateTime(2023, 12, 23), document.ModifiedDate);
+    }
+
+    [TestMethod]
+    public async Task EpubReaderShouldParseFirstAndLastAnnotationDates()
+    {
+        using var stream = AssetFactory.GetAsset(AssetFactory.GetKOReaderLibrary(), "dialogues_seneca.epub");
+        var annotation1 = new Annotation(
+            "Annotation 1",
+            new DocumentReference { Title = "Seneca’s dialogues and consolations, including “On Benefits,” examine living life through the lens of Stoic philosophy." },
+            AnnotationType.Highlight,
+            new AnnotationContext
+            {
+                DocumentSection = new DocumentSection("XVII", 0, 0, null),
+                SerializedLocation = "epubxpath:///body/DocFragment[7]/body/section/section[17]/p/text()[2].2941-/body/DocFragment[7]/body/section/section[17]/p/text()[2].3124"
+            },
+            new DateTime(2023, 12, 23));
+        var annotation2 = new Annotation(
+            "Annotation 2",
+            new DocumentReference { Title = "Seneca’s dialogues and consolations, including “On Benefits,” examine living life through the lens of Stoic philosophy." },
+            AnnotationType.Highlight,
+            new AnnotationContext
+            {
+                DocumentSection = new DocumentSection("XVII", 0, 0, null),
+                SerializedLocation = "epubxpath:///body/DocFragment[7]/body/section/section[17]/p/text()[2].2941-/body/DocFragment[7]/body/section/section[17]/p/text()[2].3124"
+            },
+            new DateTime(2023, 12, 24));
+
+        var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), [annotation1, annotation2]);
+
+        Assert.AreEqual(new DateTime(2023, 12, 23), document.CreatedDate);
+        Assert.AreEqual(new DateTime(2023, 12, 24), document.ModifiedDate);
     }
 }

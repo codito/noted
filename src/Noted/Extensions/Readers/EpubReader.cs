@@ -4,7 +4,6 @@
 namespace Noted.Extensions.Readers
 {
     using System;
-    using System.CodeDom;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -12,7 +11,6 @@ namespace Noted.Extensions.Readers
     using AngleSharp.Dom;
     using AngleSharp.Html.Parser;
     using AngleSharp.XPath;
-    using MiscUtil.Xml.Linq.Extensions;
     using Noted.Core.Extensions;
     using Noted.Core.Models;
     using Noted.Core.Platform.IO;
@@ -48,6 +46,8 @@ namespace Noted.Extensions.Readers
                 Title = epub.Title,
                 Author = epub.Author
             };
+            var firstAnnotationDate = DateTime.MaxValue;
+            var lastAnnotationDate = DateTime.MinValue;
 
             var externalAnnotations = annotations
                 .Select(a => (
@@ -84,6 +84,9 @@ namespace Noted.Extensions.Readers
                     context.Item1 == -1 ? annotationIndex : context.Item1;
                 annotation.Context.Content = context.Item2;
 
+                firstAnnotationDate = DateTime.Compare(annotation.CreatedDate, firstAnnotationDate) < 0 ? annotation.CreatedDate : firstAnnotationDate;
+                lastAnnotationDate = DateTime.Compare(annotation.CreatedDate, lastAnnotationDate) > 0 ? annotation.CreatedDate : lastAnnotationDate;
+
                 annotationIndex++;
             }
 
@@ -92,6 +95,8 @@ namespace Noted.Extensions.Readers
             {
                 Title = docRef.Title,
                 Author = docRef.Author,
+                CreatedDate = firstAnnotationDate,
+                ModifiedDate = lastAnnotationDate,
                 Annotations = annotations.OrderBy(a => a.Context.Location),
                 Sections = sortedSections
             };
