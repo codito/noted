@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v2.0.1 - 2023-12-31
+
+- Fix: add annotation start and end time for documents in KOReader library.
+
 ## v2.0.0 - 2023-12-25
 
 - Support KOReader library for annotations.
