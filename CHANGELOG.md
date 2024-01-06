@@ -2,9 +2,10 @@
 
 ## Unreleased
 
-## v2.0.1 - 2023-12-31
+## v2.1.0 - 2024-01-06
 
 - Fix: add annotation start and end time for documents in KOReader library.
+- Feature: page numbers for annotations in KOReader library.
 
 ## v2.0.0 - 2023-12-25
 
