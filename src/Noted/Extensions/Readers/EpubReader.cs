@@ -53,7 +53,7 @@ namespace Noted.Extensions.Readers
                 .Select(a => (
                     Location: EpubXPathLocation.FromString(a.Context.SerializedLocation),
                     Annotation: a))
-                .OrderBy(p => p.Location.Start.DocumentFragmentId)
+                .OrderBy(p => p.Location.GetLocation())
                 .ToList();
             if (externalAnnotations.Count == 0)
             {
@@ -80,8 +80,9 @@ namespace Noted.Extensions.Readers
                 // Note we're updating the annotation objects directly in this section.
                 var context = GetContext(allNodesInDocument, startNode, endNode);
                 annotation.Context.DocumentSection = GetSectionForAnnotation(epub, sections, docIndex, annotation.Context.DocumentSection!.Title, startNode);
-                annotation.Context.Location = ((docIndex - 1) * 1000) +
-                    context.Item1 == -1 ? annotationIndex : context.Item1;
+
+                // annotation.Context.Location = ((docIndex - 1) * 1000) +
+                //     context.Item1 == -1 ? annotationIndex : context.Item1;
                 annotation.Context.Content = context.Item2;
 
                 firstAnnotationDate = DateTime.Compare(annotation.CreatedDate, firstAnnotationDate) < 0 ? annotation.CreatedDate : firstAnnotationDate;

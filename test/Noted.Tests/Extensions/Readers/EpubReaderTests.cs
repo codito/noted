@@ -46,7 +46,7 @@ public class EpubReaderTests
             new AnnotationContext
             {
                 DocumentSection = new DocumentSection("On Giving", 0, 0, null),
-                SerializedLocation = "epubxpath:///body/DocFragment[9]/body/article/p[3]/text().0-/body/DocFragment[9]/body/article/p[3]/text().20"
+                SerializedLocation = @"{""Start"":{""DocumentFragmentId"":9,""XPath"":""/body/DocFragment[9]/body/article/p[3]/text()"",""CharacterLocation"":0},""End"":{""DocumentFragmentId"":9,""XPath"":""/body/DocFragment[9]/body/article/p[3]/text()"", ""CharacterLocation"":20},""PageNumber"":21,""SequenceOrder"":22}"
             },
             new DateTime(2023, 12, 23));
 
@@ -56,7 +56,8 @@ public class EpubReaderTests
         Assert.AreEqual(1, annotations.Count);
         Assert.AreEqual("On Giving", annotations[0].Context.DocumentSection.Title);
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
-        Assert.AreNotEqual(0, annotations[0].Context.Location);
+        Assert.AreEqual(0, annotations[0].Context.Location);
+        Assert.AreEqual(0, annotations[0].Context.PageNumber);
         Assert.AreEqual(34, document.Sections.Count());
         Assert.AreEqual(new DateTime(2023, 12, 23), document.CreatedDate);
         Assert.AreEqual(new DateTime(2023, 12, 23), document.ModifiedDate);
@@ -73,7 +74,7 @@ public class EpubReaderTests
             new AnnotationContext
             {
                 DocumentSection = new DocumentSection("XVII", 0, 0, null),
-                SerializedLocation = "epubxpath:///body/DocFragment[7]/body/section/section[17]/p/text()[2].2941-/body/DocFragment[7]/body/section/section[17]/p/text()[2].3124"
+                SerializedLocation = @"{""Start"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":2941},""End"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":3124},""PageNumber"":1,""SequenceNumber"":12}"
             },
             new DateTime(2023, 12, 23));
 
@@ -83,7 +84,7 @@ public class EpubReaderTests
         Assert.AreEqual(1, annotations.Count);
         Assert.AreEqual("XVII", annotations[0].Context.DocumentSection.Title);
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
-        Assert.AreNotEqual(0, annotations[0].Context.Location);
+        Assert.AreEqual(0, annotations[0].Context.Location); // Annotation Location is not updated by EpubReader
         Assert.AreEqual(552, document.Sections.Count());
         Assert.AreEqual(new DateTime(2023, 12, 23), document.CreatedDate);
         Assert.AreEqual(new DateTime(2023, 12, 23), document.ModifiedDate);
@@ -100,7 +101,7 @@ public class EpubReaderTests
             new AnnotationContext
             {
                 DocumentSection = new DocumentSection("XVII", 0, 0, null),
-                SerializedLocation = "epubxpath:///body/DocFragment[7]/body/section/section[17]/p/text()[2].2941-/body/DocFragment[7]/body/section/section[17]/p/text()[2].3124"
+                SerializedLocation = @"{""Start"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":2941},""End"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":3124},""PageNumber"":1,""SequenceNumber"":12}"
             },
             new DateTime(2023, 12, 23));
         var annotation2 = new Annotation(
@@ -110,7 +111,7 @@ public class EpubReaderTests
             new AnnotationContext
             {
                 DocumentSection = new DocumentSection("XVII", 0, 0, null),
-                SerializedLocation = "epubxpath:///body/DocFragment[7]/body/section/section[17]/p/text()[2].2941-/body/DocFragment[7]/body/section/section[17]/p/text()[2].3124"
+                SerializedLocation = @"{""Start"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":2941},""End"":{""DocumentFragmentId"":7,""XPath"":""/body/DocFragment[7]/body/section/section[17]/p/text()[2]"",""CharacterLocation"":3124},""PageNumber"":1,""SequenceNumber"":12}"
             },
             new DateTime(2023, 12, 24));
 

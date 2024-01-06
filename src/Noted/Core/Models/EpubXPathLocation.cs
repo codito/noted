@@ -4,21 +4,39 @@
 namespace Noted.Core.Models;
 
 using System;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
-public readonly struct EpubXPathLocation(string pos0, string pos1) : IComparable
+/// <summary>
+/// Represents an xpath location within the epub document.
+/// For example, /body/DocFragment[5]/body/article/p[24]/text().0.
+/// </summary>
+/// <param name="pos0">Start position.</param>
+/// <param name="pos1">End position.</param>
+/// <param name="pageNumber">Page number for the starting location.</param>
+/// <param name="sequenceNumber">Order number within a page.</param>
+public readonly struct EpubXPathLocation(string pos0, string pos1, int pageNumber, int sequenceNumber) : IComparable
 {
     public EpubLocation Start { get; init; } = EpubLocation.FromString(pos0);
 
     public EpubLocation End { get; init; } = EpubLocation.FromString(pos1);
 
+    public int PageNumber { get; init; } = pageNumber;
+
+    public int SequenceNumber { get; init; } = sequenceNumber;
+
     public static EpubXPathLocation FromString(string location)
     {
-        var range = new Uri(location).PathAndQuery.Split('-');
-        return new EpubXPathLocation(range[0], range[1]);
+        return JsonSerializer.Deserialize<EpubXPathLocation>(location);
     }
 
-    public override readonly string ToString() => $"epubxpath://{this.Start}-{this.End}";
+    public override readonly string ToString() => JsonSerializer.Serialize(this);
+
+    /// <summary>
+    /// Encodes the doc fragment, page number and sequence number into a single number.
+    /// </summary>
+    /// <returns>Encoded location relative to start of the document.</returns>
+    public int GetLocation() => this.Start.DocumentFragmentId << 16 | this.PageNumber << 8 | this.SequenceNumber;
 
     public readonly int CompareTo(object? obj)
     {
@@ -32,6 +50,12 @@ public readonly struct EpubXPathLocation(string pos0, string pos1) : IComparable
     }
 }
 
+/// <summary>
+/// Represents a single XPath inside a DocFragment including specific character.
+/// </summary>
+/// <param name="DocumentFragmentId">Document fragment inside epub.</param>
+/// <param name="XPath">Path query.</param>
+/// <param name="CharacterLocation">Character index within the above path.</param>
 public partial record EpubLocation(
     int DocumentFragmentId,
     string XPath,
