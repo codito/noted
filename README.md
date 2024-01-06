@@ -15,6 +15,8 @@ produce a plain text markdown file.
 **✓** Detects koreader `*.sdr` directories  
 **✓** Saves all the extracted information in markdown text
 
+A note on how the author uses this tool: [My reading workflow](https://codito.in/my-reading-workflow/).
+
 ## Installation
 
 If you've .NET Core 5.0 or above already installed, simply download the
@@ -50,6 +52,26 @@ Options:
 ```
 
 ### Examples
+
+**Extract a koreader library**
+
+Connect your reader device and use the KOReader documents library path. Noted will
+look for `*.sdr` directories besides each book to extract annotations.
+
+```
+$ ./Noted test/assets /tmp/note
+> Extracting test/assets/koreader/pg42324.epub
+ ✓ Frankenstein by Mary Shelley
+ ✓ 5 annotations in 39 sections
+ ✓ Saved to /tmp/note/pg42324.md
+
+> Extracting test/assets/koreader/the_prophet.epub
+ ✓ The Prophet by Khalil Gibran
+ ✓ 4 annotations in 34 sections
+ ✓ Saved to /tmp/note/the_prophet.md
+
+Completed in 0.65s.
+```
 
 **Extract a kindle library**
 
