@@ -1,5 +1,51 @@
--- /home/arun/src/noted/test/assets/koreader/the_prophet.sdr/metadata.epub.lua
+-- /mnt/docs/src/noted/test/assets/koreader/the_prophet.sdr/metadata.epub.lua
 return {
+    ["annotations"] = {
+        [1] = {
+            ["chapter"] = "The Coming of the Ship",
+            ["color"] = "yellow",
+            ["datetime"] = "2023-12-20 20:59:31",
+            ["drawer"] = "lighten",
+            ["page"] = "/body/DocFragment[5]/body/article/p[24]/text().0",
+            ["pageno"] = 7,
+            ["pos0"] = "/body/DocFragment[5]/body/article/p[24]/text().0",
+            ["pos1"] = "/body/DocFragment[5]/body/article/p[24]/text().68",
+            ["text"] = "And then shall I come to you, a boundless drop to a boundless ocean.",
+        },
+        [2] = {
+            ["chapter"] = "On Love",
+            ["color"] = "yellow",
+            ["datetime"] = "2023-12-20 21:01:06",
+            ["drawer"] = "lighten",
+            ["note"] = "Sample note",
+            ["page"] = "/body/DocFragment[6]/body/article/p[22]/text().0",
+            ["pageno"] = 14,
+            ["pos0"] = "/body/DocFragment[6]/body/article/p[22]/text().0",
+            ["pos1"] = "/body/DocFragment[6]/body/article/p[24]/text().33",
+            ["text"] = "Love gives naught but itself and takes naught but from itself.\
+Love possesses not nor would it be possessed;\
+For love is sufficient unto love.",
+        },
+        [3] = {
+            ["chapter"] = "On Marriage",
+            ["datetime"] = "2023-12-20 21:02:16",
+            ["page"] = "/body/DocFragment[7]/body/article/p[10]/text().0",
+            ["pageno"] = 17,
+            ["text"] = "in On Marriage",
+        },
+        [4] = {
+            ["chapter"] = "On Giving",
+            ["color"] = "yellow",
+            ["datetime"] = "2023-12-20 21:02:40",
+            ["drawer"] = "lighten",
+            ["page"] = "/body/DocFragment[9]/body/article/p[3]/text().0",
+            ["pageno"] = 20,
+            ["pos0"] = "/body/DocFragment[9]/body/article/p[3]/text().0",
+            ["pos1"] = "/body/DocFragment[9]/body/article/p[4]/text().52",
+            ["text"] = "You give but little when you give of your possessions.\
+It is when you give of yourself that you truly give.",
+        },
+    },
     ["bookmarks"] = {
         [1] = {
             ["chapter"] = "On Giving",
@@ -76,10 +122,11 @@ For love is sufficient unto love.",
     ["cre_dom_version"] = 20210904,
     ["css"] = "./data/epub.css",
     ["doc_pages"] = 103,
-    ["doc_path"] = "/home/arun/src/noted/test/assets/koreader/the_prophet.epub",
+    ["doc_path"] = "/mnt/docs/src/noted/test/assets/koreader/the_prophet.epub",
     ["doc_props"] = {
         ["authors"] = "Khalil Gibran",
         ["description"] = "A collection of prose poetry on themes such as love, beauty, and religion.",
+        ["identifiers"] = "url:https://standardebooks.org/ebooks/khalil-gibran/the-prophet",
         ["keywords"] = "Mysticism⁠-Poetry\
 Prose poems, American",
         ["language"] = "en-US",
@@ -129,6 +176,7 @@ It is when you give of yourself that you truly give.",
             },
         },
     },
+    ["highlight_color"] = "yellow",
     ["highlight_drawer"] = "lighten",
     ["highlights_imported"] = true,
     ["hyph_force_algorithmic"] = false,
@@ -142,7 +190,7 @@ It is when you give of yourself that you truly give.",
     ["partial_rerendering"] = true,
     ["percent_finished"] = 0.19417475728155,
     ["preferred_dictionaries"] = {},
-    ["readermenu_tab_index"] = 3,
+    ["readermenu_tab_index"] = 1,
     ["show_overlap_enable"] = false,
     ["stats"] = {
         ["authors"] = "Khalil Gibran",

@@ -20,7 +20,7 @@ namespace Noted.Platform.IO
 
         public void Info(string format, params object?[]? arg)
         {
-            AnsiConsole.MarkupLine($"[grey]INFO: {format}[/]", arg!);
+            AnsiConsole.MarkupLine($"[yellow]INFO: {format}[/]", arg!);
         }
     }
 }

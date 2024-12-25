@@ -26,57 +26,69 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
 
     public IEnumerable<Annotation> GetAnnotations(string sourcePath)
     {
+        this.logger.Info("KOReaderAnnotationProvider: Get annotations for '{0}'", sourcePath);
         if (!this.IsAvailable(sourcePath))
         {
+            this.logger.Debug("KOReaderAnnotationProvider: Path not available. Skip.");
             yield break;
         }
 
-        var annotationFiles = this.fileSystem.GetFiles(sourcePath, ".lua");
-        foreach (var annotation in annotationFiles)
+        var bookMetadataFiles = this.fileSystem.GetFiles(sourcePath, ".lua");
+        foreach (var metadata in bookMetadataFiles)
         {
-            using var lua = new Lua();
-            lua.State.Encoding = Encoding.UTF8;
-            var annotationTable = GetLuaTable(lua, lua.DoFile(annotation)[0]);
-            if (!annotationTable.TryGetValue("bookmarks", out var bookmarkNode) || bookmarkNode == null)
+            this.logger.Debug("KOReaderAnnotationProvider: Try parse metadata: '{0}'.", metadata);
+            if (!metadata.EndsWith("metadata.epub.lua"))
             {
+                this.logger.Error("KOReaderAnnotationProvider: Skip non epub metadata.");
                 continue;
             }
 
-            var bookmarksTable = GetLuaTable(lua, bookmarkNode);
-            var highlightTable = GetLuaTable(lua, annotationTable["highlight"]);
-            var highlights = GetHighlights(lua, highlightTable);
-            var documentTable = GetLuaTable(lua, annotationTable["doc_props"]);
+            using var lua = new Lua();
+            lua.State.Encoding = Encoding.UTF8;
+            var metadataDict = GetLuaTable(lua, lua.DoFile(metadata)[0]);
+
+            var documentTable = GetLuaTable(lua, metadataDict["doc_props"]);
+            var fileName = Path.GetFileName(metadataDict["doc_path"].ToString()!);
             var document = new DocumentReference
             {
-                Title = documentTable["title"].ToString() ?? Path.GetFileName(annotationTable["doc_path"].ToString()!),
-                Author = documentTable["authors"].ToString() ?? string.Empty
+                Title = documentTable.TryGetValue("title", out var title) ? title?.ToString() ?? fileName : fileName,
+                Author = documentTable.TryGetValue("authors", out var authors) ? authors?.ToString() ?? string.Empty : string.Empty
             };
 
-            // Highlights are keyed to the page numbers on the device used for reading.
-            // Sort them by page numbers to preserve the reading order of annotations.
-            foreach (var bookmark in bookmarksTable.Values)
+            // Annotations are supported from KOReader v2024.07 release onwards. See the notes
+            // in https://github.com/koreader/koreader/releases/tag/v2024.07.
+            if (!metadataDict.TryGetValue("annotations", out var annotationsObj))
             {
-                var bookmarkDict = GetLuaTable(lua, bookmark);
-                if (!bookmarkDict.TryGetValue("highlighted", out var highlighted) || highlighted is bool == false)
+                this.logger.Error("KOReaderAnnotationProvider: Skip older metadata format.");
+                continue;
+            }
+
+            var annotationTable = GetLuaTable(lua, annotationsObj);
+
+            // Annotations table is organized as follows
+            // { [sequenceNumber] = { highlight, ... }, ... }
+            //
+            // Note that two highlights in same page will be assigned sequence numbers as
+            // per their position in the page. This is independent of time of highlighting.
+            foreach (var kv in annotationTable)
+            {
+                var sequenceNumber = Convert.ToInt32(kv.Key);
+                var annotationDict = GetLuaTable(lua, kv.Value);
+
+                // Skip non notes or highlights
+                if (!annotationDict.ContainsKey("pos0"))
                 {
-                    // Skip non-highlighted bookmarks
                     continue;
                 }
 
-                // ["notes"] field is available for both notes and highlights.
-                // ["text"] field is available only for custom text attached to the note.
-                var notes = bookmarkDict["notes"].ToString()!;
-                var highlightDate = DateTime.Parse(bookmarkDict["datetime"].ToString()!);
-                var pos0 = bookmarkDict["pos0"].ToString()!;
-                var pos1 = bookmarkDict["pos1"].ToString()!;
-                bookmarkDict.TryGetValue("chapter", out var chapterTitle);
-
-                int pageNumber = 0, sequenceNumber = 0;
-                if (highlights.TryGetValue(pos0, out var highlight))
-                {
-                    pageNumber = highlight.PageNumber;
-                    sequenceNumber = highlight.SequenceNumber;
-                }
+                // ["text"] field is available the highlight.
+                // ["notes"] field is available for custom notes.
+                var text = annotationDict["text"].ToString()!;
+                var highlightDate = DateTime.Parse(annotationDict["datetime"].ToString()!);
+                var pos0 = annotationDict["pos0"].ToString()!;
+                var pos1 = annotationDict["pos1"].ToString()!;
+                var pageNumber = Convert.ToInt32(annotationDict["pageno"]);
+                annotationDict.TryGetValue("chapter", out var chapterTitle);
 
                 var epubXPath = new EpubXPathLocation(pos0, pos1, pageNumber, sequenceNumber);
                 var context = new AnnotationContext()
@@ -88,19 +100,19 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
                 };
 
                 yield return new Annotation(
-                        notes,
+                        text,
                         document,
                         AnnotationType.Highlight,
                         context,
                         highlightDate);
 
                 // Notes are always attached to a highlight. We emit an extra annotation in this case.
-                if (bookmarkDict.TryGetValue("text", out var text) && text != null &&
-                    !string.IsNullOrEmpty(pos0) && highlights.ContainsKey(pos0) &&
-                    !text.ToString()!.StartsWith("Page "))
+                if (annotationDict.TryGetValue("notes", out var notes) && notes != null &&
+                    !string.IsNullOrEmpty(pos0) &&
+                    !notes.ToString()!.StartsWith("Page "))
                 {
                     yield return new Annotation(
-                        text.ToString()!,
+                        notes.ToString()!,
                         document,
                         AnnotationType.Note,
                         context,
@@ -110,33 +122,5 @@ public class KOReaderAnnotationProvider(IFileSystem fileSystem, ILogger logger) 
         }
     }
 
-    private static Dictionary<string, HighlightEntry> GetHighlights(Lua lua, Dictionary<object, object> highlightTable)
-    {
-        var highlights = new Dictionary<string, HighlightEntry>();
-
-        // Highlights table is organized as follows
-        // { [pageNumber] = { [sequenceNumber]: highlight, ... }, ... }
-        foreach (var pageEntries in highlightTable)
-        {
-            var pageNumber = Convert.ToInt32(pageEntries.Key);
-            foreach (var sequenceEntries in GetLuaTable(lua, pageEntries.Value))
-            {
-                var sequenceNumber = Convert.ToInt32(sequenceEntries.Key);
-                var highlight = GetLuaTable(lua, sequenceEntries.Value);
-                var startPosition = highlight["pos0"].ToString()!;
-
-                // Possibly two annotations could start with same startPosition
-                highlights.TryAdd(startPosition, new HighlightEntry(pageNumber, sequenceNumber, startPosition));
-            }
-        }
-
-        return highlights;
-    }
-
     private static Dictionary<object, object> GetLuaTable(Lua lua, object table) => table is LuaTable luaTable ? lua.GetTableDict(luaTable) : [];
-
-    private record HighlightEntry(
-        int PageNumber,
-        int SequenceNumber,
-        string StartPosition);
 }

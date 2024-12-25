@@ -61,13 +61,13 @@ namespace Noted.Core
             this.logger.Info("ExtractWorkflow: Parsing document metadata.");
             foreach (var file in this.EnumerateDocuments(configuration.SourcePath, readersWithExtension.Keys))
             {
-                this.logger.Info("ExtractWorkflow: Processing document: {0}.", file);
+                this.logger.Debug("ExtractWorkflow: Processing document: {0}.", file);
                 if (!readersWithExtension.TryGetValue(
                     Path.GetExtension(file),
                     out var reader))
                 {
                     // Skip the file
-                    this.logger.Debug($"ExtractWorkflow: Skipped file as no readers are configured. File: {file}");
+                    this.logger.Error($"ExtractWorkflow: Skipped file as no readers are configured. File: {file}");
                     continue;
                 }
 
@@ -140,7 +140,7 @@ namespace Noted.Core
             document.Source = file;
             var outputPath = await this.WriteDocument(document, configuration);
             this.Raise(new ExtractionCompletedEventArgs { Document = document, OutputPath = outputPath });
-            this.logger.Info("ExtractWorkflow: Completed processing {0}.", file);
+            this.logger.Debug("ExtractWorkflow: Completed processing {0}.", file);
         }
 
         private async Task<string> WriteDocument(
