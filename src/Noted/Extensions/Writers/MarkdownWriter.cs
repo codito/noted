@@ -19,11 +19,11 @@ namespace Noted.Extensions.Writers
 
         public async Task Write(Configuration configuration, Document document, Stream output)
         {
-            var writer = new StreamWriter(output, Encoding.UTF8)
-            { AutoFlush = true };
+            var writer = new StreamWriter(output, Encoding.UTF8) { AutoFlush = true };
+            var title = !string.IsNullOrEmpty(document.Title) && document.Title.Contains(':') ? $"\"{document.Title}\"" : document.Title;
 
             await writer.WriteLineAsync("---");
-            await writer.WriteLineAsync($"title: {document.Title}");
+            await writer.WriteLineAsync($"title: {title}");
             await writer.WriteLineAsync($"author: {document.Author}");
             await writer.WriteLineAsync($"start date: {document.CreatedDate}");
             await writer.WriteLineAsync($"end date: {document.ModifiedDate}");
