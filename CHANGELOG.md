@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [3.0.1](https://github.com/codito/noted/compare/v3.0.0...v3.0.1) (2024-12-29)
+
+
+### Bug Fixes
+
+* publish on release create ([cd35157](https://github.com/codito/noted/commit/cd351573ed02f6e275884bb88f87e720947b1525))
+
 ## [3.0.0](https://github.com/codito/noted/compare/v2.1.0...v3.0.0) (2024-12-28)
 
 
