@@ -52,6 +52,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
     outputs:
+      build_version: ${{ steps.release.outputs.tag_name }}
       release_created: ${{ steps.release.outputs.release_created }}
 
   publish:
@@ -85,5 +86,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           gh release upload
-          '${{ github.ref_name }}' src/Noted/bin/*.zip
+          '${{ needs.version.outputs.build_version }}' src/Noted/bin/*.zip
           --repo '${{ github.repository }}'
