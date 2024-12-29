@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [3.0.3](https://github.com/codito/noted/compare/v3.0.2...v3.0.3) (2024-12-29)
+
+
+### Bug Fixes
+
+* use build version from version job ([9f63bf6](https://github.com/codito/noted/commit/9f63bf62c21f4ef0bae8084b798e1dce16b00829))
+
 ## [3.0.2](https://github.com/codito/noted/compare/v3.0.1...v3.0.2) (2024-12-29)
 
 
