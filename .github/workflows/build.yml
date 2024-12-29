@@ -36,7 +36,7 @@ jobs:
       - name: Publish
         run: dotnet publish src/Noted -o src/Noted/bin/Publish/ --configuration Release
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Noted.${{ matrix.os }}
           path: src/Noted/bin/Publish/
@@ -53,9 +53,9 @@ jobs:
           release-type: simple
 
   publish:
-    if: contains(github.ref, 'tags/v') # only publish tagged versions
     needs: [test, version]
     runs-on: ubuntu-22.04
+    if: needs.version.outputs.release_created # only publish tagged versions
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
