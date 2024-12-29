@@ -51,6 +51,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
 
   publish:
     needs: [test, version]
