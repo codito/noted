@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [3.0.2](https://github.com/codito/noted/compare/v3.0.1...v3.0.2) (2024-12-29)
+
+
+### Bug Fixes
+
+* create a job output var for release ([ee3488d](https://github.com/codito/noted/commit/ee3488d228c945ebd573d701aecc52db1dc756f0))
+
 ## [3.0.1](https://github.com/codito/noted/compare/v3.0.0...v3.0.1) (2024-12-29)
 
 
