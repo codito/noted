@@ -15,7 +15,7 @@
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.5" />
     <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
     <PackageReference Include="Markdig" Version="0.40.0" />
-    <PackageReference Include="nlua" Version="1.7.4" />
+    <PackageReference Include="nlua" Version="1.7.5" />
     <PackageReference Include="PdfPig" Version="0.1.8" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
