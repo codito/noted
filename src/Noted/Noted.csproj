@@ -14,14 +14,14 @@
     <PackageReference Include="AngleSharp.XPath" Version="2.0.5" />
     <PackageReference Include="Ephemerality.Unpack" Version="0.0.5" />
     <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
-    <PackageReference Include="Markdig" Version="0.41.1" />
+    <PackageReference Include="Markdig" Version="0.41.3" />
     <PackageReference Include="nlua" Version="1.7.5" />
-    <PackageReference Include="PdfPig" Version="0.1.8" />
+    <PackageReference Include="PdfPig" Version="0.1.10" />
     <PackageReference Include="Spectre.Console" Version="0.50.0" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-    <PackageReference Include="VersOne.Epub" Version="3.3.3" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
+    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta5.25306.1" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.3" />
+    <PackageReference Include="VersOne.Epub" Version="3.3.4" />
 
     <!-- Workaround for publish because of JTForks.MiscUtil -->
     <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
