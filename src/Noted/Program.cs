@@ -20,22 +20,23 @@ namespace Noted
         public static async Task<int> Main(string[] args)
         {
             var configurationProvider = new ConfigurationProvider()
-                .WithAnnotationProviders(config => new List<IAnnotationProvider>
-                {
+                .WithAnnotationProviders(config =>
+                [
                     new ClippingAnnotationProvider(config.FileSystem, config.Logger),
                     new KOReaderAnnotationProvider(config.FileSystem, config.Logger)
-                })
-                .WithReaders(config => new List<IDocumentReader>
-                {
+                ])
+                .WithReaders(config =>
+                [
+
                     // new KfxReader(config.Logger),
                     new EpubReader(config.Logger),
                     new PdfReader(config.Logger),
                     new MobiReader(config.Logger)
-                })
-                .WithWriters(config => new List<IDocumentWriter>
-                {
+                ])
+                .WithWriters(config =>
+                [
                     new MarkdownWriter(config.Logger)
-                });
+                ]);
 
             var workflows = new Dictionary<string, Func<Configuration, IWorkflow>>
                 { { "extract", config => new ExtractWorkflow(config.FileSystem, config.Logger) } };
