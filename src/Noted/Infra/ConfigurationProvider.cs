@@ -23,9 +23,9 @@ namespace Noted.Infra
 
         public ConfigurationProvider()
         {
-            this.annotationReaders = _ => Enumerable.Empty<IAnnotationProvider>();
-            this.documentReaders = _ => Enumerable.Empty<IDocumentReader>();
-            this.documentWriters = _ => Enumerable.Empty<IDocumentWriter>();
+            this.annotationReaders = _ => [];
+            this.documentReaders = _ => [];
+            this.documentWriters = _ => [];
             this.commandLineConfig = new Configuration();
         }
 

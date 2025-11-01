@@ -10,8 +10,8 @@ namespace Noted.Core.Models
     {
         public Document()
         {
-            this.Annotations = new List<Annotation>();
-            this.Sections = new List<DocumentSection>();
+            this.Annotations = [];
+            this.Sections = [];
         }
 
         public string? Subject { get; set; }

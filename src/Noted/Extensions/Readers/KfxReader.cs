@@ -17,7 +17,7 @@ namespace Noted.Extensions.Readers
     {
         private readonly ILogger logger = logger;
 
-        public List<string> SupportedExtensions => new() { "kfx" };
+        public List<string> SupportedExtensions => ["kfx"];
 
         public Task<DocumentReference> GetMetadata(Stream stream)
         {

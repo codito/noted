@@ -24,15 +24,15 @@ public class MarkdownWriterTests
         var stream = new MemoryStream();
         var writer = new MarkdownWriter(new NullLogger());
 
-        document.Annotations = new List<Annotation>
-        {
+        document.Annotations =
+        [
             new(
                 "dummy annotation",
                 document,
                 AnnotationType.Highlight,
                 new AnnotationContext(),
                 DateTime.Now)
-        };
+        ];
 
         await writer.Write(config, document, stream);
     }

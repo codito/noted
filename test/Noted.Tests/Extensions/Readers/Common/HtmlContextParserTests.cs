@@ -55,7 +55,7 @@ namespace Noted.Tests.Extensions.Readers.Common
             var (a, _, _) = await HtmlContextParser.AddContext(
                 this.sampleContentStream,
                 SampleSections,
-                new[] { (new LineLocation(1, 2), this.annotations[0]) });
+                [(new LineLocation(1, 2), this.annotations[0])]);
 
             Assert.AreEqual(1, a.Count);
             Assert.IsTrue(a[0].Context.Content.StartsWith("Never"));
@@ -68,7 +68,7 @@ namespace Noted.Tests.Extensions.Readers.Common
             var (a, _, _) = await HtmlContextParser.AddContext(
                 this.sampleContentStream,
                 SampleSections,
-                new[] { (new LineLocation(1, 2), this.annotations[1]) });
+                [(new LineLocation(1, 2), this.annotations[1])]);
 
             Assert.AreEqual(1, a.Count);
             Assert.IsTrue(a[0].Context.Content.StartsWith("Thus, "));

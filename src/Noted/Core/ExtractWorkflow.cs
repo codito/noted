@@ -123,7 +123,7 @@ namespace Noted.Core
                 return this.fileSystem.GetFiles(sourcePath, supportedExtensions);
             }
 
-            return new[] { sourcePath };
+            return [sourcePath];
         }
 
         private async Task ParseAnnotationsInDocument(Configuration configuration, DocumentReference docRef, IDocumentReader reader, List<Annotation> annotations)

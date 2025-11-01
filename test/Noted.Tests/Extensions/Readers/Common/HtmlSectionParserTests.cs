@@ -91,12 +91,12 @@ namespace Noted.Tests.Extensions.Readers.Common
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(TocFragment));
             var toc = await HtmlSectionParser.Parse(stream).ToListAsync();
 
-            Assert.AreEqual(null, toc[3].Parent);     // 1 -> null
+            Assert.IsNull(toc[3].Parent);     // 1 -> null
             Assert.AreEqual("Section 1.1", toc[4].Title);
             Assert.AreEqual(toc[3], toc[4].Parent);   // 1.1 -> 1
             Assert.AreEqual(toc[4], toc[5].Parent);   // 1.1.1 -> 1.1
             Assert.AreEqual(toc[3], toc[6].Parent);   // 1.2 -> 1
-            Assert.AreEqual(null, toc[7].Parent);     // 2 -> null
+            Assert.IsNull(toc[7].Parent);     // 2 -> null
         }
     }
 }

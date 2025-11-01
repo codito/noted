@@ -45,7 +45,7 @@ namespace Noted.Tests.Extensions.Readers
         [TestMethod]
         public void PdfReaderShouldThrowIfStreamIsInvalid()
         {
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 this.reader.Read(null, new ReaderOptions(), this.emptyExternalAnnotations));
         }
 
@@ -55,7 +55,7 @@ namespace Noted.Tests.Extensions.Readers
             using var stream = new MemoryStream();
             stream.Close();
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 this.reader.Read(stream, new ReaderOptions(), this.emptyExternalAnnotations));
         }
 

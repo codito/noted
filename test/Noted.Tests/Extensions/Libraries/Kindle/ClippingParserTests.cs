@@ -30,7 +30,7 @@ namespace Noted.Tests.Extensions.Libraries.Kindle
         {
             this.stream.Close();
 
-            Assert.ThrowsException<ArgumentException>(() => ClippingParser.Parse(this.stream).ToList());
+            Assert.ThrowsExactly<ArgumentException>(() => ClippingParser.Parse(this.stream).ToList());
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ Affordances refer to the potential actions that are possible, but these are easi
         {
             var line = "\ufeffSample Book";
 
-            Assert.ThrowsException<InvalidClippingException>(() => this.clipping.ParseBookInfo(line));
+            Assert.ThrowsExactly<InvalidClippingException>(() => this.clipping.ParseBookInfo(line));
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ Affordances refer to the potential actions that are possible, but these are easi
         [DataRow("- Your Highlight on page 12 | Location 100-120 | Added on Thursday, August, 2019 10:17:58 AM")]
         public void ParseAnnotationInfoShouldThrowIfAnnotationInfoIsMissingOrInvalid(string line)
         {
-            Assert.ThrowsException<InvalidClippingException>(
+            Assert.ThrowsExactly<InvalidClippingException>(
                 () => this.clipping.ParseAnnotationInfo(line));
         }
 
@@ -144,7 +144,7 @@ Affordances refer to the potential actions that are possible, but these are easi
         [TestMethod]
         public void SkipBlankLineShouldThrowIfNonBlankLineIsProvided()
         {
-            Assert.ThrowsException<InvalidClippingException>(() =>
+            Assert.ThrowsExactly<InvalidClippingException>(() =>
                 this.clipping.SkipBlankLine("xx"));
         }
 

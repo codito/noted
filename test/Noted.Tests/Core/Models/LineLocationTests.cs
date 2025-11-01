@@ -13,7 +13,7 @@ namespace Noted.Tests.Core.Models
         [TestMethod]
         public void LineLocationCompareShouldThrowExceptionForInvalidObject()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 new LineLocation(1, 2).CompareTo(string.Empty);
             });

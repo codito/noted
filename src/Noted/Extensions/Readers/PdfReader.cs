@@ -32,15 +32,15 @@ namespace Noted.Extensions.Readers
         private readonly ILogger logger = logger;
         private readonly IWordExtractor wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
 
-        public List<string> SupportedExtensions => new() { "pdf" };
+        public List<string> SupportedExtensions => ["pdf"];
 
         public Task<DocumentReference> GetMetadata(Stream stream)
         {
             var doc = PdfDocument.Open(stream);
             var docReference = new DocumentReference
             {
-                Title = doc.Information.Title,
-                Author = doc.Information.Author,
+                Title = doc.Information.Title ?? "Title unknown",
+                Author = doc.Information.Author ?? "Author unknown",
                 SupportsEmbeddedAnnotation = true
             };
 
@@ -62,8 +62,8 @@ namespace Noted.Extensions.Readers
             var doc = PdfDocument.Open(stream);
             var docReference = new DocumentReference
             {
-                Title = doc.Information.Title,
-                Author = doc.Information.Author
+                Title = doc.Information.Title ?? "Title unknown",
+                Author = doc.Information.Author ?? "Author unknown",
             };
 
             // TODO add support for external annotations in pdf
@@ -73,7 +73,7 @@ namespace Noted.Extensions.Readers
                 var words = this.wordExtractor
                     .GetWords(letters)
                     .ToList();
-                foreach (var annotation in page.ExperimentalAccess.GetAnnotations().Where(a => a.Type.Equals(AnnotationType.Highlight)))
+                foreach (var annotation in page.GetAnnotations().Where(a => a.Type.Equals(AnnotationType.Highlight)))
                 {
                     // Find highlighted words
                     var highlightedWords = new StringBuilder();
