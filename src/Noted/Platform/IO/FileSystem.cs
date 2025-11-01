@@ -35,7 +35,7 @@ namespace Noted.Platform.IO
         {
             if (!this.IsDirectory(path))
             {
-                return new[] { path };
+                return [path];
             }
 
             var extRegex = new Regex(searchPattern, RegexOptions.Compiled);

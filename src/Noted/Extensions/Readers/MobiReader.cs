@@ -20,7 +20,7 @@ namespace Noted.Extensions.Readers
         private readonly ILogger logger = logger;
 
         // TODO add support for azw3
-        public List<string> SupportedExtensions => new() { "mobi" };
+        public List<string> SupportedExtensions => ["mobi"];
 
         public Task<DocumentReference> GetMetadata(Stream stream)
         {

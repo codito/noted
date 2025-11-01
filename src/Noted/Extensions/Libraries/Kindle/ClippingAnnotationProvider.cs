@@ -29,7 +29,7 @@ namespace Noted.Extensions.Libraries.Kindle
         {
             if (!this.IsAvailable(sourcePath))
             {
-                return Enumerable.Empty<Annotation>();
+                return [];
             }
 
             var annotationFile = Path.Combine(sourcePath, ClippingsFile);

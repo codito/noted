@@ -21,7 +21,7 @@ namespace Noted.Extensions.Readers
     {
         private readonly ILogger logger = logger;
 
-        public List<string> SupportedExtensions => new() { "epub" };
+        public List<string> SupportedExtensions => ["epub"];
 
         public async Task<DocumentReference> GetMetadata(Stream stream)
         {

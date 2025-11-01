@@ -32,7 +32,7 @@ namespace Noted.Extensions.Readers
         private readonly ILogger logger = logger;
         private readonly IWordExtractor wordExtractor = new NearestNeighbourWordExtractor(GetWordExtractOptions());
 
-        public List<string> SupportedExtensions => new() { "pdf" };
+        public List<string> SupportedExtensions => ["pdf"];
 
         public Task<DocumentReference> GetMetadata(Stream stream)
         {
