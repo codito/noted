@@ -1,8 +1,6 @@
 <Project>
   <ItemGroup>
-    <PackageReference Include="Stylecop.Analyzers" Condition="$(StylecopEnabled) == '' or $(StylecopEnabled) != 'false'">
-      <Version>1.2.0-beta.556</Version>
-    </PackageReference>
+    <PackageReference Include="Stylecop.Analyzers" Condition="$(StylecopEnabled) == '' or $(StylecopEnabled) != 'false'" />
   </ItemGroup>
   <Target Name="husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
     <Exec Command="dotnet tool restore"  StandardOutputImportance="Low" StandardErrorImportance="High"/>

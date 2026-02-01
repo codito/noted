@@ -20,9 +20,11 @@
 
       CS1573: Parameter 'parameter' has no matching param tag in the XML comment for 'parameter' (but other parameters do)
       CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
+      NU1510: PackageReference will not be pruned. We need few packages because of dependencies, e.g. JTForks.MiscUtil.
+      NU1902: vulnerable package references should be updated. We are overriding some transitive dependencies.
     -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
+    <NoWarn>$(NoWarn),1573,1591,1712,NU1510,NU1902,NU1903</NoWarn>
 
     <!-- Show full paths for the warnings and errors -->
     <GenerateFullPaths>true</GenerateFullPaths>

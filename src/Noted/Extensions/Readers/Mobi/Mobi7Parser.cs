@@ -51,7 +51,12 @@ namespace Noted.Extensions.Readers.Mobi
             // Prepare the table of contents stream for return
             contentStream.Seek(tocFilePos, SeekOrigin.Begin);
             var bytes = new byte[tocContentEnd];
-            await contentStream.ReadAsync(bytes);
+            int bytesRead = await contentStream.ReadAsync(bytes);
+            if (bytesRead != tocContentEnd)
+            {
+                throw new IOException("Expected to read " + tocContentEnd + " bytes but only read " + bytesRead + " bytes from TOC stream");
+            }
+
             return new MemoryStream(bytes);
         }
     }

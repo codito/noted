@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Core Libraries -->
+    <PackageVersion Include="AngleSharp" Version="1.4.0" />
+    <PackageVersion Include="AngleSharp.XPath" Version="2.0.5" />
+    <PackageVersion Include="Ephemerality.Unpack" Version="0.0.7" />
+    <PackageVersion Include="JTForks.MiscUtil" Version="1.285.0" />
+    <PackageVersion Include="Markdig" Version="0.44.0" />
+    <PackageVersion Include="nlua" Version="1.7.8" />
+    <PackageVersion Include="PdfPig" Version="0.1.13" />
+    <PackageVersion Include="Spectre.Console" Version="0.54.0" />
+    <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageVersion Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
+    <PackageVersion Include="System.Linq.Async" Version="7.0.0" />
+    <PackageVersion Include="VersOne.Epub" Version="3.3.3" />
+    
+   <!-- Workaround for publish because of JTForks.MiscUtil -->
+    <PackageVersion Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+    <PackageVersion Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageVersion Include="System.IO.FileSystem" Version="4.3.0" />
+
+    <!-- Test Dependencies -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.10.5" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.10.5" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    
+    <!-- Code Analysis -->
+    <PackageVersion Include="Stylecop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
+</Project>

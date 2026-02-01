@@ -6,27 +6,27 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="1.4.0" />
-    <PackageReference Include="AngleSharp.XPath" Version="2.0.5" />
-    <PackageReference Include="Ephemerality.Unpack" Version="0.0.5" />
-    <PackageReference Include="JTForks.MiscUtil" Version="1.285.0" />
-    <PackageReference Include="Markdig" Version="0.44.0" />
-    <PackageReference Include="nlua" Version="1.7.8" />
-    <PackageReference Include="PdfPig" Version="0.1.11" />
-    <PackageReference Include="Spectre.Console" Version="0.54.0" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="System.Linq.Async" Version="7.0.0" />
-    <PackageReference Include="VersOne.Epub" Version="3.3.3" />
+    <PackageReference Include="AngleSharp" />
+    <PackageReference Include="AngleSharp.XPath" />
+    <PackageReference Include="Ephemerality.Unpack" />
+    <PackageReference Include="JTForks.MiscUtil" />
+    <PackageReference Include="Markdig" />
+    <PackageReference Include="nlua" />
+    <PackageReference Include="PdfPig" />
+    <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="System.CommandLine.NamingConventionBinder" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="VersOne.Epub" />
 
     <!-- Workaround for publish because of JTForks.MiscUtil -->
-    <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
-    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Win32.Primitives" />
+    <PackageReference Include="System.Net.Primitives" />
+    <PackageReference Include="System.IO.FileSystem" />
   </ItemGroup>
 
 </Project>
