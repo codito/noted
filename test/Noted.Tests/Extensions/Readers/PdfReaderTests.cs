@@ -84,7 +84,7 @@ namespace Noted.Tests.Extensions.Readers
             var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 
             var annotations = document.Annotations.ToList();
-            Assert.AreEqual(2, annotations.Count);
+            Assert.HasCount(2, annotations);
             Assert.AreEqual(
                 "Nam id ante vitae erat consequat bibendum quis vitae sapien. Etiam ac quam ac felis gravida rutrum. ",
                 annotations[0].Content);
@@ -102,7 +102,7 @@ namespace Noted.Tests.Extensions.Readers
             var document = await this.reader.Read(fs, new ReaderOptions(), this.emptyExternalAnnotations);
 
             var annotations = document.Annotations.ToList();
-            Assert.AreEqual(5, annotations.Count);
+            Assert.HasCount(5, annotations);
 
             // Multiple paragraphs are joined in context because there isn't much
             // space between paragraph formatting

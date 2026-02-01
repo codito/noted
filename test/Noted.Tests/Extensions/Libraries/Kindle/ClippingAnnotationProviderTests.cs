@@ -49,7 +49,7 @@ The interpretation of a perceived affordance is a cultural convention.
             var kindle = new ClippingAnnotationProvider(fileSystem.Object, new NullLogger());
             var clippings = kindle.GetAnnotations("dummyPath").ToList();
 
-            Assert.AreEqual(3, clippings.Count);
+            Assert.HasCount(3, clippings);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ The interpretation of a perceived affordance is a cultural convention.
             var kindle = new ClippingAnnotationProvider(fileSystem.Object, new NullLogger());
             var clippings = kindle.GetAnnotations("dummyPath").ToList();
 
-            Assert.AreEqual(0, clippings.Count);
+            Assert.IsEmpty(clippings);
         }
     }
 }

@@ -53,7 +53,7 @@ public class EpubReaderTests
         var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), [annotation]);
 
         var annotations = document.Annotations.ToList();
-        Assert.AreEqual(1, annotations.Count);
+        Assert.HasCount(1, annotations);
         Assert.AreEqual("On Giving", annotations[0].Context.DocumentSection.Title);
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
         Assert.AreEqual(0, annotations[0].Context.Location);
@@ -81,7 +81,7 @@ public class EpubReaderTests
         var document = await new EpubReader(this.logger).Read(stream, new Noted.Core.Extensions.ReaderOptions(), [annotation]);
 
         var annotations = document.Annotations.ToList();
-        Assert.AreEqual(1, annotations.Count);
+        Assert.HasCount(1, annotations);
         Assert.AreEqual("XVII", annotations[0].Context.DocumentSection.Title);
         Assert.AreNotEqual(0, annotations[0].Context.DocumentSection.Location);
         Assert.AreEqual(0, annotations[0].Context.Location); // Annotation Location is not updated by EpubReader

@@ -66,11 +66,11 @@ namespace Noted.Infra
                 : new NullLogger();
 
             this.commandLineConfig.AnnotationProviders =
-                this.annotationReaders(this.commandLineConfig).ToList();
+                [.. this.annotationReaders(this.commandLineConfig)];
             this.commandLineConfig.Readers =
-                this.documentReaders(this.commandLineConfig).ToList();
+                [.. this.documentReaders(this.commandLineConfig)];
             this.commandLineConfig.Writers =
-                this.documentWriters(this.commandLineConfig).ToList();
+                [.. this.documentWriters(this.commandLineConfig)];
 
             return this.commandLineConfig;
         }

@@ -34,7 +34,7 @@ namespace Noted.Extensions.Libraries.Kindle
 
             var annotationFile = Path.Combine(sourcePath, ClippingsFile);
             using var stream = this.fileSystem.OpenPathForRead(annotationFile);
-            return ClippingParser.Parse(stream).Select(c => c.ToAnnotation()).ToList();
+            return [.. ClippingParser.Parse(stream).Select(c => c.ToAnnotation())];
         }
     }
 }

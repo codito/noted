@@ -57,8 +57,8 @@ namespace Noted.Tests.Extensions.Readers.Common
                 SampleSections,
                 [(new LineLocation(1, 2), this.annotations[0])]);
 
-            Assert.AreEqual(1, a.Count);
-            Assert.IsTrue(a[0].Context.Content.StartsWith("Never"));
+            Assert.HasCount(1, a);
+            Assert.StartsWith("Never", a[0].Context.Content);
             Assert.AreEqual("Ch1", a[0].Context.DocumentSection.Title);
         }
 
@@ -70,8 +70,8 @@ namespace Noted.Tests.Extensions.Readers.Common
                 SampleSections,
                 [(new LineLocation(1, 2), this.annotations[1])]);
 
-            Assert.AreEqual(1, a.Count);
-            Assert.IsTrue(a[0].Context.Content.StartsWith("Thus, "));
+            Assert.HasCount(1, a);
+            Assert.StartsWith("Thus, ", a[0].Context.Content);
             Assert.AreEqual("Ch2", a[0].Context.DocumentSection.Title);
         }
 

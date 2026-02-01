@@ -66,13 +66,15 @@ namespace Noted.Tests.Extensions.Readers.Common
             this.parser = new HtmlSectionParser();
         }
 
+        public TestContext TestContext { get; set; }
+
         [TestMethod]
         public async Task ParseShouldReturnTableOfContentWithDepth()
         {
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(TocFragment));
-            var toc = await HtmlSectionParser.Parse(stream).ToListAsync();
+            var toc = await HtmlSectionParser.Parse(stream).ToListAsync(this.TestContext.CancellationTokenSource.Token);
 
-            Assert.AreEqual(11, toc.Count);
+            Assert.HasCount(11, toc);
             Assert.AreEqual("Preface", toc[0].Title);
             Assert.AreEqual(1, toc[0].Level);
             Assert.AreEqual(3859, toc[0].Location);
@@ -89,7 +91,7 @@ namespace Noted.Tests.Extensions.Readers.Common
         public async Task ParseShouldCreateDocumentSectionRelationships()
         {
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(TocFragment));
-            var toc = await HtmlSectionParser.Parse(stream).ToListAsync();
+            var toc = await HtmlSectionParser.Parse(stream).ToListAsync(this.TestContext.CancellationTokenSource.Token);
 
             Assert.IsNull(toc[3].Parent);     // 1 -> null
             Assert.AreEqual("Section 1.1", toc[4].Title);

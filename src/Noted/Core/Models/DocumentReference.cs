@@ -34,9 +34,9 @@ namespace Noted.Core.Models
                     return this.authorVector;
                 }
 
-                this.authorVector = new SortedSet<string>(this.Author
+                this.authorVector = [.. this.Author
                     .Split(' ')
-                    .Select(x => x.Trim(' ', ',', '.').ToLower()));
+                    .Select(x => x.Trim(' ', ',', '.').ToLower())];
                 return this.authorVector;
             }
         }

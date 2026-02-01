@@ -51,7 +51,7 @@ Affordances refer to the potential actions that are possible, but these are easi
 
             var clippings = ClippingParser.Parse(this.stream).ToList();
 
-            Assert.AreEqual(2, clippings.Count);
+            Assert.HasCount(2, clippings);
             Assert.AreEqual("The Design of Everyday Things: Revised and Expanded Edition", clippings[0].Book);
             Assert.AreEqual("Norman, Don", clippings[0].Author);
             Assert.AreEqual(ClippingType.Highlight, clippings[0].Type);
@@ -59,7 +59,7 @@ Affordances refer to the potential actions that are possible, but these are easi
             Assert.AreEqual(3015, clippings[0].Location.Start);
             Assert.AreEqual(3016, clippings[0].Location.End);
             Assert.AreEqual(new DateTime(2019, 08, 15, 10, 14, 40), clippings[0].CreationDate);
-            Assert.IsTrue(clippings[0].Content.StartsWith("Forcing functions can be"));
+            Assert.StartsWith("Forcing functions can be", clippings[0].Content);
 
             Assert.AreEqual(ClippingType.Note, clippings[1].Type);
         }
@@ -83,7 +83,7 @@ Affordances refer to the potential actions that are possible, but these are easi
 
             var clippings = ClippingParser.Parse(this.stream).ToList();
 
-            Assert.AreEqual(2, clippings.Count);
+            Assert.HasCount(2, clippings);
             Assert.AreEqual(-1, clippings[0].PageNumber);
             Assert.AreEqual(3026, clippings[0].Location.Start);
             Assert.AreEqual(3026, clippings[0].Location.End);

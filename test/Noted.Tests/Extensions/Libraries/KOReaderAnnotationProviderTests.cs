@@ -49,7 +49,7 @@ namespace Noted.Tests.Extensions.Libraries
             var annotations =
                 this.annotationProvider.GetAnnotations(AssetFactory.GetKindleLibrary()).ToList();
 
-            Assert.AreEqual(0, annotations.Count);
+            Assert.IsEmpty(annotations);
         }
     }
 }
