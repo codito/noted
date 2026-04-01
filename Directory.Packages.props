@@ -26,8 +26,8 @@
 
     <!-- Test Dependencies -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.10.5" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.10.5" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.1.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.1.0" />
     <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="coverlet.msbuild" Version="8.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
